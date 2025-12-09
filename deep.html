@@ -1,0 +1,2702 @@
+<!DOCTYPE html><html lang="ru"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Atlas Travel — Service & Visa Hub</title> <style> :root { --primary: #2563eb; --primary-dark: #1d4ed8; --secondary: #64748b; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --light: #f8fafc; --dark: #1e293b; --border: #e2e8f0; --sidebar-width: 260px; --header-height: 70px; --radius: 8px; --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: #f1f5f9;
+    color: var(--dark);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* HEADER */
+.header {
+    height: var(--header-height);
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    box-shadow: var(--shadow);
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo h1 {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.logo span {
+    color: var(--secondary);
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+.role-switcher {
+    position: relative;
+}
+
+.role-pill {
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.role-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-width: 200px;
+    display: none;
+    z-index: 1000;
+}
+
+.role-dropdown.show {
+    display: block;
+}
+
+.role-option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.role-option:hover {
+    background: var(--light);
+}
+
+.role-option.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* MAIN LAYOUT */
+.main-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: var(--sidebar-width);
+    background: white;
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    overflow-y: auto;
+    transition: transform 0.3s;
+}
+
+.sidebar-item {
+    padding: 0.85rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--secondary);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-item:hover {
+    background: var(--light);
+    color: var(--dark);
+}
+
+.sidebar-item.active {
+    background: #eff6ff;
+    color: var(--primary);
+    border-left-color: var(--primary);
+    font-weight: 600;
+}
+
+.sidebar-icon {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
+}
+
+/* CONTENT */
+.content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.page {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+/* CARDS */
+.card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.metric-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    border-top: 4px solid var(--primary);
+}
+
+.metric-card h3 {
+    font-size: 0.9rem;
+    color: var(--secondary);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.metric-change {
+    font-size: 0.85rem;
+    color: var(--success);
+}
+
+/* BUTTONS */
+.btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary {
+    background: var(--secondary);
+    color: white;
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--dark);
+}
+
+.btn-outline:hover {
+    background: var(--light);
+}
+
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.btn-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* TABLES */
+.table-container {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+th {
+    background: #f8fafc;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--dark);
+    border-bottom: 2px solid var(--border);
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+tr:hover {
+    background: #f8fafc;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-success {
+    background: #d1fae5;
+    color: var(--success);
+}
+
+.badge-warning {
+    background: #fef3c7;
+    color: var(--warning);
+}
+
+.badge-danger {
+    background: #fee2e2;
+    color: var(--danger);
+}
+
+.badge-info {
+    background: #dbeafe;
+    color: var(--primary);
+}
+
+/* THREE COLUMN LAYOUT */
+.three-column {
+    display: grid;
+    grid-template-columns: 300px 350px 1fr;
+    gap: 1.5rem;
+    height: calc(100vh - 180px);
+}
+
+.column {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.column-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.column-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.group-list, .pilgrim-list {
+    list-style: none;
+}
+
+.group-item, .pilgrim-item {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.group-item:hover, .pilgrim-item:hover {
+    background: #f8fafc;
+}
+
+.group-item.selected, .pilgrim-item.selected {
+    background: #eff6ff;
+    border-left: 4px solid var(--primary);
+}
+
+.group-name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.group-meta {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    display: flex;
+    justify-content: space-between;
+}
+
+.pilgrim-name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.pilgrim-phone {
+    font-size: 0.85rem;
+    color: var(--secondary);
+}
+
+/* PILGRIM DETAIL */
+.pilgrim-detail {
+    padding: 1.5rem;
+}
+
+.pilgrim-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.pilgrim-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.pilgrim-info p {
+    color: var(--secondary);
+}
+
+.section {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--dark);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    transition: border 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* MODALS */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--secondary);
+}
+
+/* CALENDAR */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+}
+
+.calendar-header {
+    background: #f8fafc;
+    padding: 0.75rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.calendar-day {
+    background: white;
+    padding: 0.75rem;
+    min-height: 100px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.calendar-day:hover {
+    background: #f8fafc;
+}
+
+.calendar-day-number {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.event {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.25rem;
+    border-radius: 4px;
+    background: #dbeafe;
+    color: var(--primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* UTILITIES */
+.d-flex {
+    display: flex;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.gap-1 {
+    gap: 0.5rem;
+}
+
+.gap-2 {
+    gap: 1rem;
+}
+
+.mb-1 {
+    margin-bottom: 0.5rem;
+}
+
+.mb-2 {
+    margin-bottom: 1rem;
+}
+
+.mb-3 {
+    margin-bottom: 1.5rem;
+}
+
+.mt-1 {
+    margin-top: 0.5rem;
+}
+
+.mt-2 {
+    margin-top: 1rem;
+}
+
+.mt-3 {
+    margin-top: 1.5rem;
+}
+
+.text-muted {
+    color: var(--secondary);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .three-column {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .column {
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: var(--header-height);
+        bottom: 0;
+        transform: translateX(-100%);
+        z-index: 100;
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .header {
+        padding: 0 1rem;
+    }
+    
+    .content {
+        padding: 1rem;
+    }
+}
+</style>
+</head> <body> <!-- HEADER --> <header class="header"> <div class="logo"> <h1>Atlas Travel <span>— Service & Visa Hub</span></h1> </div> <div class="role-switcher"> <div class="role-pill" id="currentRole"> <span>Роль: Админ</span> <span>▼</span> </div> <div class="role-dropdown" id="roleDropdown"> <div class="role-option active" data-role="admin">Админ</div> <div class="role-option" data-role="service">Сервис</div> <div class="role-option" data-role="op">ОП</div> <div class="role-option" data-role="finance">Финансы</div> </div> </div> </header>
+    <!-- MAIN CONTAINER -->
+<div class="main-container">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <div class="sidebar-item active" data-page="dashboard">
+            <span class="sidebar-icon">📊</span>
+            <span>Дашборд</span>
+        </div>
+        <div class="sidebar-item" data-page="groups">
+            <span class="sidebar-icon">👥</span>
+            <span>Группы и паломники</span>
+        </div>
+        <div class="sidebar-item" data-page="templates">
+            <span class="sidebar-icon">📝</span>
+            <span>Шаблоны</span>
+        </div>
+        <div class="sidebar-item" data-page="managers">
+            <span class="sidebar-icon">👨‍💼</span>
+            <span>Менеджеры</span>
+        </div>
+        <div class="sidebar-item" data-page="schedule">
+            <span class="sidebar-icon">📅</span>
+            <span>Расписание отправки</span>
+        </div>
+        <div class="sidebar-item" data-page="documents">
+            <span class="sidebar-icon">📎</span>
+            <span>Документы</span>
+        </div>
+        <div class="sidebar-item" data-page="settings">
+            <span class="sidebar-icon">⚙️</span>
+            <span>Настройки системы</span>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="content">
+        <!-- DASHBOARD PAGE -->
+        <section id="dashboard" class="page active">
+            <div class="page-header">
+                <h2 class="page-title">Дашборд</h2>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="openModal('createGroupModal')">Создать группу</button>
+                    <button class="btn btn-primary" onclick="openModal('createPilgrimModal')">Добавить паломника</button>
+                    <button class="btn btn-success" onclick="openModal('createTemplateModal')">Создать шаблон</button>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h3>Активных групп</h3>
+                    <div class="metric-value" id="activeGroupsCount">0</div>
+                    <div class="metric-change">+2 за неделю</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Всего паломников</h3>
+                    <div class="metric-value" id="totalPilgrims">0</div>
+                    <div class="metric-change">+12 за неделю</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Без визы</h3>
+                    <div class="metric-value" id="noVisaCount">0</div>
+                    <div class="metric-change">Требует внимания</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Предоплаты</h3>
+                    <div class="metric-value" id="totalPrepayments">0 USD</div>
+                    <div class="metric-change">+5,200 USD</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Доплаты</h3>
+                    <div class="metric-value" id="totalExtra">0 USD</div>
+                    <div class="metric-change">+2,800 USD</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Осталось оплатить</h3>
+                    <div class="metric-value" id="totalRemaining">0 USD</div>
+                    <div class="metric-change">Общая задолженность</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="section-title">Статистика по статусам паломников</h3>
+                <div id="statusChart" style="height: 200px; display: flex; align-items: flex-end; gap: 10px; padding: 1rem;">
+                    <!-- Chart bars will be generated by JS -->
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="section-title">Журнал активности</h3>
+                <div class="table-container">
+                    <table id="activityLog">
+                        <thead>
+                            <tr>
+                                <th>Время</th>
+                                <th>Событие</th>
+                                <th>Пользователь</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Activity logs will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- GROUPS & PILGRIMS PAGE -->
+        <section id="groups" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Группы и паломники</h2>
+            </div>
+            <div class="three-column">
+                <!-- COLUMN 1: GROUPS -->
+                <div class="column">
+                    <div class="column-header">
+                        <span>Группы</span>
+                        <button class="btn btn-sm btn-primary" onclick="openModal('createGroupModal')">+ Создать</button>
+                    </div>
+                    <div class="column-content">
+                        <ul class="group-list" id="groupList">
+                            <!-- Groups will be populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- COLUMN 2: PILGRIMS -->
+                <div class="column">
+                    <div class="column-header">
+                        <span id="pilgrimsTitle">Паломники</span>
+                        <button class="btn btn-sm btn-primary" id="addPilgrimBtn" onclick="openModal('createPilgrimModal')" disabled>+ Добавить</button>
+                    </div>
+                    <div class="column-content">
+                        <div id="noGroupSelected" class="text-center" style="padding: 2rem; color: var(--secondary);">
+                            Выберите группу слева
+                        </div>
+                        <ul class="pilgrim-list" id="pilgrimList" style="display: none;">
+                            <!-- Pilgrims will be populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- COLUMN 3: PILGRIM DETAIL -->
+                <div class="column">
+                    <div class="column-header">
+                        <span>Карточка паломника</span>
+                    </div>
+                    <div class="column-content">
+                        <div id="noPilgrimSelected" class="text-center" style="padding: 2rem; color: var(--secondary);">
+                            Выберите паломника
+                        </div>
+                        <div id="pilgrimDetail" class="pilgrim-detail" style="display: none;">
+                            <!-- Pilgrim detail will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEMPLATES PAGE -->
+        <section id="templates" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Шаблоны сообщений</h2>
+                <button class="btn btn-primary" onclick="openTemplateModal()">+ Создать шаблон</button>
+            </div>
+            <div class="card">
+                <div class="table-container">
+                    <table id="templatesTable">
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Тип триггера</th>
+                                <th>Канал</th>
+                                <th>Активен</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Templates will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- MANAGERS PAGE -->
+        <section id="managers" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Менеджеры</h2>
+                <button class="btn btn-primary" onclick="openModal('createManagerModal')">+ Добавить менеджера</button>
+            </div>
+            <div class="card">
+                <div class="table-container">
+                    <table id="managersTable">
+                        <thead>
+                            <tr>
+                                <th>Имя</th>
+                                <th>Телефон</th>
+                                <th>Роль</th>
+                                <th>Кол-во паломников</th>
+                                <th>Кол-во платежей</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Managers will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCHEDULE PAGE -->
+        <section id="schedule" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Расписание отправки шаблонов</h2>
+                <button class="btn btn-primary" onclick="openModal('createScheduleModal')">+ Создать событие</button>
+            </div>
+            <div class="card">
+                <h3 class="section-title">Май 2024</h3>
+                <div class="calendar" id="calendar">
+                    <!-- Calendar will be generated by JS -->
+                </div>
+            </div>
+            <div class="card mt-3">
+                <h3 class="section-title" id="dayEventsTitle">События дня: 15 мая 2024</h3>
+                <div id="dayEvents">
+                    <!-- Day events will be populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- DOCUMENTS PAGE -->
+        <section id="documents" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Документы</h2>
+                <button class="btn btn-primary" onclick="openModal('uploadDocumentModal')">+ Загрузить документ</button>
+            </div>
+            <div class="card mb-3">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Тип документа</label>
+                        <select id="docTypeFilter">
+                            <option value="">Все</option>
+                            <option value="visa">Виза</option>
+                            <option value="passport">Паспорт</option>
+                            <option value="insurance">Страховка</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Группа</label>
+                        <select id="docGroupFilter">
+                            <option value="">Все</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Статус</label>
+                        <select id="docStatusFilter">
+                            <option value="">Все</option>
+                            <option value="preparing">В подготовке</option>
+                            <option value="ready_to_send">Готов к отправке</option>
+                            <option value="sent">Отправлен</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-primary w-100" onclick="filterDocuments()">Применить фильтры</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-container">
+                    <table id="documentsTable">
+                        <thead>
+                            <tr>
+                                <th>Тип документа</th>
+                                <th>Имя паломника</th>
+                                <th>Группа</th>
+                                <th>Статус</th>
+                                <th>Дата загрузки</th>
+                                <th>Кем загружен</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Documents will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SETTINGS PAGE -->
+        <section id="settings" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Настройки системы</h2>
+                <button class="btn btn-primary" onclick="saveSettings()">Сохранить настройки</button>
+            </div>
+            <div class="card mb-3">
+                <h3 class="section-title">Мессенджеры</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>WhatsApp API ключ</label>
+                        <input type="password" id="whatsappApiKey" value="••••••••••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label>Telegram Bot Token</label>
+                        <input type="password" id="telegramToken" placeholder="Будет добавлен позже">
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="testMessaging()">Проверить отправку</button>
+            </div>
+            <div class="card mb-3">
+                <h3 class="section-title">Безопасность</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Минимальная длина пароля</label>
+                        <input type="number" id="minPasswordLength" value="8" min="6" max="20">
+                    </div>
+                    <div class="form-group">
+                        <label>Требовать специальные символы</label>
+                        <select id="requireSpecialChars">
+                            <option value="true">Да</option>
+                            <option value="false">Нет</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="section-title">Права доступа по ролям</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Действие</th>
+                                <th>Админ</th>
+                                <th>Сервис</th>
+                                <th>ОП</th>
+                                <th>Финансы</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Создание групп</td>
+                                <td><input type="checkbox" checked disabled></td>
+                                <td><input type="checkbox"></td>
+                                <td><input type="checkbox"></td>
+                                <td><input type="checkbox"></td>
+                            </tr>
+                            <tr>
+                                <td>Добавление паломников</td>
+                                <td><input type="checkbox" checked disabled></td>
+                                <td><input type="checkbox" checked></td>
+                                <td><input type="checkbox" checked></td>
+                                <td><input type="checkbox"></td>
+                            </tr>
+                            <tr>
+                                <td>Загрузка документов</td>
+                                <td><input type="checkbox" checked disabled></td>
+                                <td><input type="checkbox" checked></td>
+                                <td><input type="checkbox"></td>
+                                <td><input type="checkbox"></td>
+                            </tr>
+                            <tr>
+                                <td>Добавление платежей</td>
+                                <td><input type="checkbox" checked disabled></td>
+                                <td><input type="checkbox"></td>
+                                <td><input type="checkbox"></td>
+                                <td><input type="checkbox" checked></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- MODALS -->
+<!-- CREATE GROUP MODAL -->
+<div id="createGroupModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Создать группу</h3>
+            <button class="close-modal" onclick="closeModal('createGroupModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Название группы *</label>
+                    <input type="text" id="groupName" placeholder="Например: Мекка-2024-05">
+                </div>
+                <div class="form-group">
+                    <label>Маршрут *</label>
+                    <input type="text" id="groupRoute" placeholder="Например: Москва - Мекка - Медина">
+                </div>
+                <div class="form-group">
+                    <label>Дата вылета *</label>
+                    <input type="date" id="groupDepartDate">
+                </div>
+                <div class="form-group">
+                    <label>Дата прилёта *</label>
+                    <input type="date" id="groupReturnDate">
+                </div>
+                <div class="form-group">
+                    <label>Статус</label>
+                    <select id="groupStatus">
+                        <option value="new">Новая</option>
+                        <option value="preparing">В подготовке</option>
+                        <option value="flying">В полёте</option>
+                        <option value="in_trip">В поездке</option>
+                        <option value="finished">Завершена</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('createGroupModal')">Отмена</button>
+            <button class="btn btn-primary" onclick="saveGroup()">Сохранить группу</button>
+        </div>
+    </div>
+</div>
+
+<!-- CREATE PILGRIM MODAL -->
+<div id="createPilgrimModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Добавить паломника</h3>
+            <button class="close-modal" onclick="closeModal('createPilgrimModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Группа *</label>
+                    <select id="pilgrimGroup">
+                        <!-- Groups will be populated by JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ФИО *</label>
+                    <input type="text" id="pilgrimFullName" placeholder="Иванов Иван Иванович">
+                </div>
+                <div class="form-group">
+                    <label>Телефон *</label>
+                    <input type="tel" id="pilgrimPhone" placeholder="+7 (999) 123-45-67">
+                </div>
+                <div class="form-group">
+                    <label>Предоплата (USD) *</label>
+                    <input type="number" id="pilgrimPrepayment" value="500" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Сервис-менеджер *</label>
+                    <select id="pilgrimManager">
+                        <!-- Managers will be populated by JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Общая стоимость тура (USD) *</label>
+                    <input type="number" id="pilgrimTourPrice" value="2500" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Отель</label>
+                    <select id="pilgrimHotel">
+                        <option value="Hilton">Hilton Makkah</option>
+                        <option value="Movenpick">Movenpick Hotel & Residence</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group mt-2">
+                <label>Загрузка паспорта (PDF)</label>
+                <input type="file" id="pilgrimPassportFile" accept=".pdf,.jpg,.png">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('createPilgrimModal')">Отмена</button>
+            <button class="btn btn-primary" onclick="savePilgrim()">Сохранить паломника</button>
+        </div>
+    </div>
+</div>
+
+<!-- CREATE TEMPLATE MODAL -->
+<div id="createTemplateModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Создать шаблон сообщения</h3>
+            <button class="close-modal" onclick="closeModal('createTemplateModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Название шаблона *</label>
+                    <input type="text" id="templateName" placeholder="Напоминание о вылете">
+                </div>
+                <div class="form-group">
+                    <label>Тип триггера *</label>
+                    <select id="templateTriggerType">
+                        <option value="time_before_departure">Время до вылета</option>
+                        <option value="time_before_arrival">Время до прилёта</option>
+                        <option value="document_based">При появлении документа</option>
+                        <option value="manual">Вручную</option>
+                    </select>
+                </div>
+                <div id="timeBasedFields" class="form-grid">
+                    <div class="form-group">
+                        <label>Дней до</label>
+                        <input type="number" id="offsetDays" value="3" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Часов до</label>
+                        <input type="number" id="offsetHours" value="0" min="0" max="23">
+                    </div>
+                    <div class="form-group">
+                        <label>Минут до</label>
+                        <input type="number" id="offsetMinutes" value="0" min="0" max="59">
+                    </div>
+                </div>
+                <div id="documentBasedFields" class="form-group" style="display: none;">
+                    <label>Тип документа</label>
+                    <select id="templateDocumentType">
+                        <option value="visa">Виза</option>
+                        <option value="ticket">Авиабилет</option>
+                        <option value="insurance">Страховка</option>
+                    </select>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label>Текст сообщения *</label>
+                    <textarea id="templateBody" rows="6" placeholder="Уважаемый {name}! Напоминаем, что ваш вылет {depart_date}. Ваш отель: {hotel_name}. Контакт менеджера: {manager_phone}."></textarea>
+                    <small class="text-muted">Доступные плейсхолдеры: {name}, {depart_date}, {return_date}, {hotel_name}, {manager_name}, {manager_phone}</small>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="templateCanAttachFile">
+                        Прикреплять файл
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="templateIsActive" checked>
+                        Активен
+                    </label>
+                </div>
+            </div>
+            <button class="btn btn-secondary mt-2" onclick="previewTemplate()">Предпросмотр</button>
+            <div id="templatePreview" class="mt-2" style="padding: 1rem; background: #f8f9fa; border-radius: var(--radius); display: none;">
+                <strong>Предпросмотр:</strong>
+                <p id="previewText"></p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('createTemplateModal')">Отмена</button>
+            <button class="btn btn-primary" onclick="saveTemplate()">Сохранить шаблон</button>
+        </div>
+    </div>
+</div>
+
+<!-- CREATE MANAGER MODAL -->
+<div id="createManagerModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Добавить менеджера</h3>
+            <button class="close-modal" onclick="closeModal('createManagerModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Имя *</label>
+                    <input type="text" id="managerName" placeholder="Айша Нурланова">
+                </div>
+                <div class="form-group">
+                    <label>Телефон *</label>
+                    <input type="tel" id="managerPhone" placeholder="+7 (777) 123-45-67">
+                </div>
+                <div class="form-group">
+                    <label>Роль *</label>
+                    <select id="managerRole">
+                        <option value="admin">Админ</option>
+                        <option value="service_manager">Сервис-менеджер</option>
+                        <option value="op">ОП</option>
+                        <option value="finance">Финансы</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('createManagerModal')">Отмена</button>
+            <button class="btn btn-primary" onclick="saveManager()">Сохранить менеджера</button>
+        </div>
+    </div>
+</div>
+
+<!-- ADD PAYMENT MODAL -->
+<div id="addPaymentModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Добавить платеж</h3>
+            <button class="close-modal" onclick="closeModal('addPaymentModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Тип платежа *</label>
+                    <select id="paymentType">
+                        <option value="prepayment">Предоплата</option>
+                        <option value="extra">Доплата</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Сумма (USD) *</label>
+                    <input type="number" id="paymentAmount" min="0" step="0.01">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label>Комментарий</label>
+                    <textarea id="paymentComment" rows="3" placeholder="Например: Оплата за страховку"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('addPaymentModal')">Отмена</button>
+            <button class="btn btn-primary" onclick="savePayment()">Добавить платеж</button>
+        </div>
+    </div>
+</div>
+
+<!-- UPLOAD DOCUMENT MODAL -->
+<div id="uploadDocumentModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Загрузить документ</h3>
+            <button class="close-modal" onclick="closeModal('uploadDocumentModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Паломник *</label>
+                    <select id="documentPilgrim">
+                        <!-- Pilgrims will be populated by JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Тип документа *</label>
+                    <select id="documentType">
+                        <option value="visa">Виза</option>
+                        <option value="insurance">Страховка</option>
+                        <option value="ticket">Авиабилет</option>
+                        <option value="voucher">Ваучер</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Статус</label>
+                    <select id="documentStatus">
+                        <option value="preparing">В подготовке</option>
+                        <option value="ready_to_send">Готов к отправке</option>
+                        <option value="sent">Отправлен</option>
+                    </select>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label>Файл документа *</label>
+                    <input type="file" id="documentFile">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('uploadDocumentModal')">Отмена</button>
+            <button class="btn btn-primary" onclick="saveDocument()">Загрузить документ</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== DATA MODEL ====================
+    let currentRole = 'admin';
+    let selectedGroupId = null;
+    let selectedPilgrimId = null;
+    let editingTemplateId = null;
+    let editingManagerId = null;
+
+    // Mock data initialization
+    const users = [
+        { id: 1, name: 'Админ Админов', phone: '+7 (999) 111-22-33', role: 'admin', created_at: '2024-01-15' },
+        { id: 2, name: 'Айша Нурланова', phone: '+7 (777) 123-45-67', role: 'op', created_at: '2024-02-10' },
+        { id: 3, name: 'Нурлан Сервисов', phone: '+7 (707) 987-65-43', role: 'service_manager', created_at: '2024-02-15' },
+        { id: 4, name: 'Алия Финансова', phone: '+7 (708) 555-44-33', role: 'finance', created_at: '2024-03-01' }
+    ];
+
+    const service_groups = [
+        { id: 1, name: 'Мекка-2024-05', route: 'Алматы - Мекка - Медина', depart_date: '2024-05-15', return_date: '2024-05-25', status: 'preparing', created_at: '2024-03-01' },
+        { id: 2, name: 'Умра-2024-04', route: 'Нур-Султан - Джидда', depart_date: '2024-04-10', return_date: '2024-04-20', status: 'flying', created_at: '2024-02-15' },
+        { id: 3, name: 'Мекка-2024-06', route: 'Шымкент - Мекка', depart_date: '2024-06-01', return_date: '2024-06-15', status: 'new', created_at: '2024-03-10' }
+    ];
+
+    const pilgrims = [
+        { 
+            id: 1, 
+            group_id: 1, 
+            manager_id: 3,
+            full_name: 'Иванов Иван Иванович',
+            phone: '+7 (701) 123-45-67',
+            messenger: 'whatsapp',
+            status: 'training',
+            depart_date: '2024-05-15',
+            return_date: '2024-05-25',
+            hotel_name: 'Hilton Makkah',
+            hotel_type: '5 звезд',
+            room_type: 'Standard',
+            board_type: 'Полупансион',
+            transfer_type: 'Групповой',
+            tour_start_date: '2024-05-15',
+            tour_end_date: '2024-05-25',
+            tour_price_usd: 2500,
+            passport_number: '123456789',
+            passport_citizenship: 'Казахстан',
+            passport_birth_date: '1980-05-15',
+            passport_gender: 'Мужской',
+            passport_issue_date: '2020-01-01',
+            passport_expiry_date: '2030-01-01',
+            passport_authority: 'МВД РК',
+            passport_photo_url: '',
+            passport_verified: true,
+            created_at: '2024-03-01',
+            updated_at: '2024-03-15'
+        },
+        { 
+            id: 2, 
+            group_id: 1, 
+            manager_id: 3,
+            full_name: 'Петрова Айгуль Саматовна',
+            phone: '+7 (702) 987-65-43',
+            messenger: 'whatsapp',
+            status: 'ready',
+            depart_date: '2024-05-15',
+            return_date: '2024-05-25',
+            hotel_name: 'Movenpick Hotel & Residence',
+            hotel_type: '5 звезд',
+            room_type: 'Deluxe',
+            board_type: 'Завтрак',
+            transfer_type: 'Индивидуальный',
+            tour_start_date: '2024-05-15',
+            tour_end_date: '2024-05-25',
+            tour_price_usd: 3200,
+            passport_number: '987654321',
+            passport_citizenship: 'Казахстан',
+            passport_birth_date: '1990-08-20',
+            passport_gender: 'Женский',
+            passport_issue_date: '2021-03-15',
+            passport_expiry_date: '2031-03-15',
+            passport_authority: 'МВД РК',
+            passport_photo_url: '',
+            passport_verified: false,
+            created_at: '2024-03-05',
+            updated_at: '2024-03-10'
+        }
+    ];
+
+    const documents = [
+        { id: 1, pilgrim_id: 1, type: 'passport', file_url: '', original_name: 'passport_ivanov.pdf', status: 'sent', uploaded_by_user_id: 2, uploaded_at: '2024-03-02' },
+        { id: 2, pilgrim_id: 1, type: 'visa', file_url: '', original_name: 'visa_ivanov.pdf', status: 'ready_to_send', uploaded_by_user_id: 3, uploaded_at: '2024-03-10' },
+        { id: 3, pilgrim_id: 2, type: 'passport', file_url: '', original_name: 'passport_petrova.pdf', status: 'preparing', uploaded_by_user_id: 2, uploaded_at: '2024-03-06' },
+        { id: 4, pilgrim_id: 2, type: 'insurance', file_url: '', original_name: 'insurance_petrova.pdf', status: 'sent', uploaded_by_user_id: 3, uploaded_at: '2024-03-12' }
+    ];
+
+    const payments = [
+        { id: 1, pilgrim_id: 1, type: 'prepayment', amount_usd: 500, paid_at: '2024-03-01', created_by_user_id: 2, comment: 'Первая предоплата' },
+        { id: 2, pilgrim_id: 1, type: 'extra', amount_usd: 300, paid_at: '2024-03-15', created_by_user_id: 4, comment: 'Доплата за визу' },
+        { id: 3, pilgrim_id: 2, type: 'prepayment', amount_usd: 800, paid_at: '2024-03-05', created_by_user_id: 2, comment: 'Предоплата 50%' }
+    ];
+
+    const message_templates = [
+        {
+            id: 1,
+            name: 'Напоминание перед вылетом',
+            trigger_type: 'time_before_departure',
+            trigger_key: 'before_departure',
+            offset_days: 3,
+            offset_hours: 0,
+            offset_minutes: 0,
+            document_type: null,
+            channel: 'whatsapp',
+            body: 'Уважаемый {name}! Напоминаем, что ваш вылет {depart_date}. Прибытие в аэропорт за 3 часа. Ваш отель: {hotel_name}. Контакт менеджера: {manager_phone}.',
+            variables: {},
+            can_attach_file: false,
+            is_active: true,
+            created_at: '2024-02-01'
+        },
+        {
+            id: 2,
+            name: 'Уведомление о визе',
+            trigger_type: 'document_based',
+            trigger_key: 'visa_ready',
+            offset_days: 0,
+            offset_hours: 0,
+            offset_minutes: 0,
+            document_type: 'visa',
+            channel: 'whatsapp',
+            body: 'Уважаемый {name}! Ваша виза готова. Мы отправим её вам в течение 24 часов.',
+            variables: {},
+            can_attach_file: true,
+            is_active: true,
+            created_at: '2024-02-15'
+        }
+    ];
+
+    const message_logs = [
+        { id: 1, pilgrim_id: 1, template_id: 1, sent_by_user_id: null, channel: 'whatsapp', status: 'sent', body_rendered: 'Уважаемый Иван Иванович! Напоминаем, что ваш вылет 2024-05-15...', attachment_url: null, sent_at: '2024-05-12 10:00:00' },
+        { id: 2, pilgrim_id: 1, template_id: 2, sent_by_user_id: 3, channel: 'whatsapp', status: 'delivered', body_rendered: 'Уважаемый Иван Иванович! Ваша виза готова...', attachment_url: 'visa.pdf', sent_at: '2024-03-10 14:30:00' }
+    ];
+
+    const system_settings = {
+        whatsapp_api_key: 'test_key_123',
+        telegram_token: '',
+        min_password_length: 8,
+        require_special_chars: true
+    };
+
+    // ==================== UTILITY FUNCTIONS ====================
+    function formatDate(dateString) {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ru-RU');
+    }
+
+    function formatDateTime(dateTimeString) {
+        if (!dateTimeString) return '-';
+        const date = new Date(dateTimeString);
+        return date.toLocaleString('ru-RU');
+    }
+
+    function formatMoney(amount) {
+        return new Intl.NumberFormat('ru-RU', { style: 'decimal' }).format(amount) + ' USD';
+    }
+
+    function generateId() {
+        return Date.now() + Math.floor(Math.random() * 1000);
+    }
+
+    // ==================== UI FUNCTIONS ====================
+    function initUI() {
+        // Role switcher
+        document.getElementById('currentRole').addEventListener('click', function() {
+            document.getElementById('roleDropdown').classList.toggle('show');
+        });
+
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function() {
+                currentRole = this.dataset.role;
+                const roleNames = { admin: 'Админ', service: 'Сервис', op: 'ОП', finance: 'Финансы' };
+                document.getElementById('currentRole').innerHTML = `<span>Роль: ${roleNames[currentRole]}</span> <span>▼</span>`;
+                
+                // Update active class
+                document.querySelectorAll('.role-option').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Close dropdown
+                document.getElementById('roleDropdown').classList.remove('show');
+                
+                // Re-render UI based on role
+                renderDashboard();
+                renderGroupsAndPilgrims();
+            });
+        });
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const pageId = this.dataset.page;
+                showPage(pageId);
+                
+                // Update active class
+                document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.role-switcher')) {
+                document.getElementById('roleDropdown').classList.remove('show');
+            }
+        });
+
+        // Initialize data and render
+        renderDashboard();
+        renderGroupsAndPilgrims();
+        renderTemplatesPage();
+        renderManagersPage();
+        renderSchedulePage();
+        renderDocumentsPage();
+    }
+
+    function showPage(pageId) {
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        
+        // Show selected page
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.add('show');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('show');
+        if (modalId === 'createTemplateModal') {
+            editingTemplateId = null;
+            document.getElementById('templateName').value = '';
+            document.getElementById('templateBody').value = '';
+        }
+        if (modalId === 'createManagerModal') {
+            editingManagerId = null;
+            document.getElementById('managerName').value = '';
+            document.getElementById('managerPhone').value = '';
+        }
+    }
+
+    // ==================== DASHBOARD ====================
+    function renderDashboard() {
+        // Calculate metrics
+        const activeGroupsCount = service_groups.filter(g => g.status === 'preparing' || g.status === 'flying').length;
+        const totalPilgrims = pilgrims.length;
+        const noVisaCount = pilgrims.filter(p => !documents.some(d => d.pilgrim_id === p.id && d.type === 'visa')).length;
+        
+        const totalPrepayments = payments.filter(p => p.type === 'prepayment')
+            .reduce((sum, p) => sum + p.amount_usd, 0);
+        const totalExtra = payments.filter(p => p.type === 'extra')
+            .reduce((sum, p) => sum + p.amount_usd, 0);
+        const totalTourPrice = pilgrims.reduce((sum, p) => sum + (p.tour_price_usd || 0), 0);
+        const totalPaid = payments.reduce((sum, p) => sum + p.amount_usd, 0);
+        const totalRemaining = totalTourPrice - totalPaid;
+
+        // Update metric cards
+        document.getElementById('activeGroupsCount').textContent = activeGroupsCount;
+        document.getElementById('totalPilgrims').textContent = totalPilgrims;
+        document.getElementById('noVisaCount').textContent = noVisaCount;
+        document.getElementById('totalPrepayments').textContent = formatMoney(totalPrepayments);
+        document.getElementById('totalExtra').textContent = formatMoney(totalExtra);
+        document.getElementById('totalRemaining').textContent = formatMoney(totalRemaining);
+
+        // Render status chart
+        const statusCounts = {};
+        pilgrims.forEach(p => {
+            statusCounts[p.status] = (statusCounts[p.status] || 0) + 1;
+        });
+        
+        const statusNames = {
+            new: 'Новый',
+            training: 'Обучение',
+            ready: 'Готов',
+            flying: 'В полёте',
+            in_hotel: 'В отеле',
+            rituals: 'Обряды',
+            finished: 'Завершён'
+        };
+        
+        const chartContainer = document.getElementById('statusChart');
+        chartContainer.innerHTML = '';
+        
+        const maxCount = Math.max(...Object.values(statusCounts), 1);
+        Object.entries(statusCounts).forEach(([status, count]) => {
+            const barHeight = (count / maxCount) * 150;
+            const bar = document.createElement('div');
+            bar.style.cssText = `
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex: 1;
+            `;
+            
+            bar.innerHTML = `
+                <div style="height: ${barHeight}px; width: 40px; background: var(--primary); border-radius: 4px;"></div>
+                <div style="margin-top: 0.5rem; font-weight: 600;">${count}</div>
+                <div style="font-size: 0.75rem; color: var(--secondary); text-align: center;">${statusNames[status] || status}</div>
+            `;
+            
+            chartContainer.appendChild(bar);
+        });
+
+        // Render activity log
+        const activityLog = document.getElementById('activityLog').querySelector('tbody');
+        activityLog.innerHTML = '';
+        
+        // Create mock activities
+        const activities = [
+            { time: '2024-05-12 10:00:00', event: 'Авто-сообщение отправлено по шаблону "Напоминание перед вылетом"', user: 'Система' },
+            { time: '2024-05-10 14:30:00', event: 'Сервис-менеджер Нурлан загрузил визовый документ для Иванов И.И.', user: 'Нурлан Сервисов' },
+            { time: '2024-05-05 11:15:00', event: 'ОП Айша создала паломника Петрова А.С.', user: 'Айша Нурланова' },
+            { time: '2024-05-01 09:45:00', event: 'Финансовый отдел добавил доплату 300 USD', user: 'Алия Финансова' }
+        ];
+        
+        activities.forEach(activity => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${formatDateTime(activity.time)}</td>
+                <td>${activity.event}</td>
+                <td>${activity.user}</td>
+            `;
+            activityLog.appendChild(row);
+        });
+    }
+
+    // ==================== GROUPS & PILGRIMS ====================
+    function renderGroupsAndPilgrims() {
+        // Render groups list
+        const groupList = document.getElementById('groupList');
+        groupList.innerHTML = '';
+        
+        service_groups.forEach(group => {
+            const pilgrimCount = pilgrims.filter(p => p.group_id === group.id).length;
+            const groupItem = document.createElement('li');
+            groupItem.className = 'group-item';
+            if (selectedGroupId === group.id) groupItem.classList.add('selected');
+            
+            groupItem.innerHTML = `
+                <div class="group-name">${group.name}</div>
+                <div class="group-meta">
+                    <span>${formatDate(group.depart_date)}</span>
+                    <span>${pilgrimCount} чел.</span>
+                </div>
+                <div class="text-muted" style="font-size: 0.8rem;">${group.route}</div>
+            `;
+            
+            groupItem.addEventListener('click', () => {
+                selectedGroupId = group.id;
+                renderGroupsAndPilgrims();
+                renderPilgrimsList();
+            });
+            
+            groupList.appendChild(groupItem);
+        });
+
+        // Update pilgrims title and button
+        const selectedGroup = service_groups.find(g => g.id === selectedGroupId);
+        const addPilgrimBtn = document.getElementById('addPilgrimBtn');
+        
+        if (selectedGroup) {
+            const pilgrimCount = pilgrims.filter(p => p.group_id === selectedGroupId).length;
+            document.getElementById('pilgrimsTitle').textContent = `Паломники: ${selectedGroup.name}`;
+            addPilgrimBtn.disabled = false;
+            addPilgrimBtn.onclick = () => openModal('createPilgrimModal');
+            
+            // Populate group select in pilgrim modal
+            const pilgrimGroupSelect = document.getElementById('pilgrimGroup');
+            pilgrimGroupSelect.innerHTML = '';
+            service_groups.forEach(group => {
+                const option = document.createElement('option');
+                option.value = group.id;
+                option.textContent = group.name;
+                if (group.id === selectedGroupId) option.selected = true;
+                pilgrimGroupSelect.appendChild(option);
+            });
+        } else {
+            document.getElementById('pilgrimsTitle').textContent = 'Паломники';
+            addPilgrimBtn.disabled = true;
+        }
+    }
+
+    function renderPilgrimsList() {
+        const noGroupSelected = document.getElementById('noGroupSelected');
+        const pilgrimList = document.getElementById('pilgrimList');
+        
+        if (!selectedGroupId) {
+            noGroupSelected.style.display = 'block';
+            pilgrimList.style.display = 'none';
+            return;
+        }
+        
+        noGroupSelected.style.display = 'none';
+        pilgrimList.style.display = 'block';
+        pilgrimList.innerHTML = '';
+        
+        const groupPilgrims = pilgrims.filter(p => p.group_id === selectedGroupId);
+        
+        groupPilgrims.forEach(pilgrim => {
+            const pilgrimItem = document.createElement('li');
+            pilgrimItem.className = 'pilgrim-item';
+            if (selectedPilgrimId === pilgrim.id) pilgrimItem.classList.add('selected');
+            
+            // Get visa status
+            const visaDoc = documents.find(d => d.pilgrim_id === pilgrim.id && d.type === 'visa');
+            let visaStatus = 'Без визы';
+            if (visaDoc) {
+                visaStatus = visaDoc.status === 'sent' ? 'Виза отправлена' : 'Виза загружена';
+            }
+            
+            pilgrimItem.innerHTML = `
+                <div class="pilgrim-name">${pilgrim.full_name}</div>
+                <div class="pilgrim-phone">${pilgrim.phone}</div>
+                <div class="d-flex justify-between align-center mt-1">
+                    <span class="badge ${pilgrim.status === 'ready' ? 'badge-success' : 'badge-warning'}">
+                        ${pilgrim.status}
+                    </span>
+                    <span style="font-size: 0.8rem; color: var(--secondary);">${visaStatus}</span>
+                </div>
+            `;
+            
+            pilgrimItem.addEventListener('click', () => {
+                selectedPilgrimId = pilgrim.id;
+                renderPilgrimsList();
+                renderSelectedPilgrim();
+            });
+            
+            pilgrimList.appendChild(pilgrimItem);
+        });
+    }
+
+    function renderSelectedPilgrim() {
+        const noPilgrimSelected = document.getElementById('noPilgrimSelected');
+        const pilgrimDetail = document.getElementById('pilgrimDetail');
+        
+        if (!selectedPilgrimId) {
+            noPilgrimSelected.style.display = 'block';
+            pilgrimDetail.style.display = 'none';
+            return;
+        }
+        
+        noPilgrimSelected.style.display = 'none';
+        pilgrimDetail.style.display = 'block';
+        
+        const pilgrim = pilgrims.find(p => p.id === selectedPilgrimId);
+        if (!pilgrim) return;
+        
+        // Get manager name
+        const manager = users.find(u => u.id === pilgrim.manager_id);
+        const managerName = manager ? manager.name : 'Не назначен';
+        
+        // Get documents for this pilgrim
+        const pilgrimDocuments = documents.filter(d => d.pilgrim_id === pilgrim.id);
+        const visaDoc = pilgrimDocuments.find(d => d.type === 'visa');
+        const insuranceDoc = pilgrimDocuments.find(d => d.type === 'insurance');
+        
+        // Get payments for this pilgrim
+        const pilgrimPayments = payments.filter(p => p.pid === pilgrim.id);
+        const totalPaid = pilgrimPayments.reduce((sum, p) => sum + p.amount_usd, 0);
+        const remaining = pilgrim.tour_price_usd - totalPaid;
+        
+        // Generate initials for avatar
+        const initials = pilgrim.full_name.split(' ').map(n => n[0]).join('').toUpperCase();
+        
+        pilgrimDetail.innerHTML = `
+            <div class="pilgrim-header">
+                <div class="avatar">${initials}</div>
+                <div class="pilgrim-info">
+                    <h3>${pilgrim.full_name}</h3>
+                    <p>${pilgrim.phone} • WhatsApp • ${managerName}</p>
+                    <div class="d-flex gap-1 mt-1">
+                        <span class="badge ${pilgrim.status === 'ready' ? 'badge-success' : 'badge-warning'}">
+                            ${pilgrim.status}
+                        </span>
+                        <span class="badge badge-info">Группа: ${service_groups.find(g => g.id === pilgrim.group_id)?.name}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h4 class="section-title">Паспорт</h4>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>№ паспорта</label>
+                        <input type="text" value="${pilgrim.passport_number || ''}" id="editPassportNumber">
+                    </div>
+                    <div class="form-group">
+                        <label>Гражданство</label>
+                        <input type="text" value="${pilgrim.passport_citizenship || ''}" id="editPassportCitizenship">
+                    </div>
+                    <div class="form-group">
+                        <label>Дата рождения</label>
+                        <input type="date" value="${pilgrim.passport_birth_date || ''}" id="editPassportBirthDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Пол</label>
+                        <select id="editPassportGender">
+                            <option value="Мужской" ${pilgrim.passport_gender === 'Мужской' ? 'selected' : ''}>Мужской</option>
+                            <option value="Женский" ${pilgrim.passport_gender === 'Женский' ? 'selected' : ''}>Женский</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата выдачи</label>
+                        <input type="date" value="${pilgrim.passport_issue_date || ''}" id="editPassportIssueDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Дата окончания</label>
+                        <input type="date" value="${pilgrim.passport_expiry_date || ''}" id="editPassportExpiryDate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Кем выдан</label>
+                    <input type="text" value="${pilgrim.passport_authority || ''}" id="editPassportAuthority" class="w-100">
+                </div>
+                <div class="d-flex justify-between align-center mt-2">
+                    <div>
+                        <input type="file" id="editPassportFile">
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" id="editPassportVerified" ${pilgrim.passport_verified ? 'checked' : ''}>
+                            Паспорт проверен
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h4 class="section-title">Виза и документы</h4>
+                <div class="mb-2">
+                    <strong>Статус визы:</strong>
+                    ${!visaDoc ? '<span class="badge badge-danger">Отсутствует</span>' : 
+                      visaDoc.status === 'sent' ? '<span class="badge badge-success">Отправлена паломнику</span>' : 
+                      '<span class="badge badge-warning">Загружена, не отправлена</span>'}
+                </div>
+                <div class="mb-2">
+                    <strong>Страховка:</strong>
+                    ${!insuranceDoc ? '<span class="badge badge-danger">Отсутствует</span>' : 
+                      insuranceDoc.status === 'sent' ? '<span class="badge badge-success">Отправлена</span>' : 
+                      '<span class="badge badge-warning">Загружена</span>'}
+                </div>
+                <div class="d-flex gap-1 mb-3">
+                    <button class="btn btn-sm btn-outline">Загрузить визу</button>
+                    <button class="btn btn-sm btn-outline">Загрузить страховку</button>
+                    <button class="btn btn-sm btn-outline">Загрузить другие</button>
+                </div>
+                
+                <h5>Документы паломника:</h5>
+                <div class="table-container">
+                    <table style="font-size: 0.9rem;">
+                        <thead>
+                            <tr>
+                                <th>Тип</th>
+                                <th>Статус</th>
+                                <th>Дата загрузки</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${pilgrimDocuments.map(doc => {
+                                const uploadedBy = users.find(u => u.id === doc.uploaded_by_user_id);
+                                return `
+                                    <tr>
+                                        <td>${doc.type}</td>
+                                        <td><span class="badge ${doc.status === 'sent' ? 'badge-success' : 'badge-warning'}">${doc.status}</span></td>
+                                        <td>${formatDate(doc.uploaded_at)}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="alert('Открыть документ: ${doc.original_name}')">Открыть</button>
+                                            <button class="btn btn-sm btn-outline">Скачать</button>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h4 class="section-title">Платежи</h4>
+                <div class="mb-2">
+                    <strong>Стоимость тура:</strong> ${formatMoney(pilgrim.tour_price_usd)}
+                </div>
+                <div class="table-container">
+                    <table style="font-size: 0.9rem;">
+                        <thead>
+                            <tr>
+                                <th>Тип</th>
+                                <th>Сумма USD</th>
+                                <th>Дата</th>
+                                <th>Кто добавил</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${pilgrimPayments.map(payment => {
+                                const createdBy = users.find(u => u.id === payment.created_by_user_id);
+                                return `
+                                    <tr>
+                                        <td>${payment.type === 'prepayment' ? 'Предоплата' : 'Доплата'}</td>
+                                        <td>${formatMoney(payment.amount_usd)}</td>
+                                        <td>${formatDate(payment.paid_at)}</td>
+                                        <td>${createdBy ? createdBy.name : '-'}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-between align-center mt-2">
+                    <div>
+                        <strong>Уже оплачено:</strong> ${formatMoney(totalPaid)}<br>
+                        <strong>Осталось оплатить:</strong> ${formatMoney(remaining)}
+                    </div>
+                    ${currentRole === 'finance' || currentRole === 'admin' ? `
+                        <button class="btn btn-primary" onclick="openModal('addPaymentModal')">Добавить платеж</button>
+                    ` : ''}
+                </div>
+            </div>
+            
+            <div class="section">
+                <h4 class="section-title">Детальная информация</h4>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Отель</label>
+                        <input type="text" value="${pilgrim.hotel_name || ''}" id="editHotelName">
+                    </div>
+                    <div class="form-group">
+                        <label>Тип отеля</label>
+                        <input type="text" value="${pilgrim.hotel_type || ''}" id="editHotelType">
+                    </div>
+                    <div class="form-group">
+                        <label>Тип питания</label>
+                        <input type="text" value="${pilgrim.board_type || ''}" id="editBoardType">
+                    </div>
+                    <div class="form-group">
+                        <label>Трансфер</label>
+                        <input type="text" value="${pilgrim.transfer_type || ''}" id="editTransferType">
+                    </div>
+                    <div class="form-group">
+                        <label>Дата начала тура</label>
+                        <input type="date" value="${pilgrim.tour_start_date || ''}" id="editTourStartDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Дата окончания тура</label>
+                        <input type="date" value="${pilgrim.tour_end_date || ''}" id="editTourEndDate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Статус паломника</label>
+                    <select id="editPilgrimStatus">
+                        <option value="new" ${pilgrim.status === 'new' ? 'selected' : ''}>Новый</option>
+                        <option value="training" ${pilgrim.status === 'training' ? 'selected' : ''}>Обучение</option>
+                        <option value="ready" ${pilgrim.status === 'ready' ? 'selected' : ''}>Готов</option>
+                        <option value="flying" ${pilgrim.status === 'flying' ? 'selected' : ''}>В полёте</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Сервис-менеджер</label>
+                    <select id="editPilgrimManager">
+                        ${users.filter(u => u.role === 'service_manager').map(manager => `
+                            <option value="${manager.id}" ${pilgrim.manager_id === manager.id ? 'selected' : ''}>${manager.name}</option>
+                        `).join('')}
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary w-100 mt-3" onclick="savePilgrimChanges()">Сохранить изменения</button>
+        `;
+    }
+
+    function savePilgrimChanges() {
+        const pilgrimIndex = pilgrims.findIndex(p => p.id === selectedPilgrimId);
+        if (pilgrimIndex === -1) return;
+        
+        // Update passport data
+        pilgrims[pilgrimIndex].passport_number = document.getElementById('editPassportNumber').value;
+        pilgrims[pilgrimIndex].passport_citizenship = document.getElementById('editPassportCitizenship').value;
+        pilgrims[pilgrimIndex].passport_birth_date = document.getElementById('editPassportBirthDate').value;
+        pilgrims[pilgrimIndex].passport_gender = document.getElementById('editPassportGender').value;
+        pilgrims[pilgrimIndex].passport_issue_date = document.getElementById('editPassportIssueDate').value;
+        pilgrims[pilgrimIndex].passport_expiry_date = document.getElementById('editPassportExpiryDate').value;
+        pilgrims[pilgrimIndex].passport_authority = document.getElementById('editPassportAuthority').value;
+        pilgrims[pilgrimIndex].passport_verified = document.getElementById('editPassportVerified').checked;
+        
+        // Update tour info
+        pilgrims[pilgrimIndex].hotel_name = document.getElementById('editHotelName').value;
+        pilgrims[pilgrimIndex].hotel_type = document.getElementById('editHotelType').value;
+        pilgrims[pilgrimIndex].board_type = document.getElementById('editBoardType').value;
+        pilgrims[pilgrimIndex].transfer_type = document.getElementById('editTransferType').value;
+        pilgrims[pilgrimIndex].tour_start_date = document.getElementById('editTourStartDate').value;
+        pilgrims[pilgrimIndex].tour_end_date = document.getElementById('editTourEndDate').value;
+        pilgrims[pilgrimIndex].status = document.getElementById('editPilgrimStatus').value;
+        pilgrims[pilgrimIndex].manager_id = parseInt(document.getElementById('editPilgrimManager').value);
+        pilgrims[pilgrimIndex].updated_at = new Date().toISOString().split('T')[0];
+        
+        alert('Изменения сохранены (локально).');
+        renderSelectedPilgrim();
+        renderPilgrimsList();
+        renderDashboard();
+    }
+
+    // ==================== GROUP FUNCTIONS ====================
+    function saveGroup() {
+        const groupName = document.getElementById('groupName').value.trim();
+        const groupRoute = document.getElementById('groupRoute').value.trim();
+        const departDate = document.getElementById('groupDepartDate').value;
+        const returnDate = document.getElementById('groupReturnDate').value;
+        const status = document.getElementById('groupStatus').value;
+        
+        if (!groupName || !groupRoute || !departDate || !returnDate) {
+            alert('Заполните все обязательные поля');
+            return;
+        }
+        
+        const newGroup = {
+            id: generateId(),
+            name: groupName,
+            route: groupRoute,
+            depart_date: departDate,
+            return_date: returnDate,
+            status: status,
+            created_at: new Date().toISOString().split('T')[0]
+        };
+        
+        service_groups.push(newGroup);
+        closeModal('createGroupModal');
+        renderGroupsAndPilgrims();
+        renderDashboard();
+        
+        // Reset form
+        document.getElementById('groupName').value = '';
+        document.getElementById('groupRoute').value = '';
+        document.getElementById('groupDepartDate').value = '';
+        document.getElementById('groupReturnDate').value = '';
+    }
+
+    // ==================== PILGRIM FUNCTIONS ====================
+    function savePilgrim() {
+        const groupId = parseInt(document.getElementById('pilgrimGroup').value);
+        const fullName = document.getElementById('pilgrimFullName').value.trim();
+        const phone = document.getElementById('pilgrimPhone').value.trim();
+        const prepayment = parseFloat(document.getElementById('pilgrimPrepayment').value);
+        const managerId = parseInt(document.getElementById('pilgrimManager').value);
+        const tourPrice = parseFloat(document.getElementById('pilgrimTourPrice').value);
+        const hotel = document.getElementById('pilgrimHotel').value;
+        
+        if (!groupId || !fullName || !phone || isNaN(prepayment) || !managerId || isNaN(tourPrice)) {
+            alert('Заполните все обязательные поля');
+            return;
+        }
+        
+        const newPilgrim = {
+            id: generateId(),
+            group_id: groupId,
+            manager_id: managerId,
+            full_name: fullName,
+            phone: phone,
+            messenger: 'whatsapp',
+            status: 'new',
+            depart_date: service_groups.find(g => g.id === groupId)?.depart_date || '',
+            return_date: service_groups.find(g => g.id === groupId)?.return_date || '',
+            hotel_name: hotel,
+            hotel_type: '5 звезд',
+            room_type: 'Standard',
+            board_type: 'Полупансион',
+            transfer_type: 'Групповой',
+            tour_start_date: service_groups.find(g => g.id === groupId)?.depart_date || '',
+            tour_end_date: service_groups.find(g => g.id === groupId)?.return_date || '',
+            tour_price_usd: tourPrice,
+            passport_number: '',
+            passport_citizenship: 'Казахстан',
+            passport_birth_date: '',
+            passport_gender: 'Мужской',
+            passport_issue_date: '',
+            passport_expiry_date: '',
+            passport_authority: '',
+            passport_photo_url: '',
+            passport_verified: false,
+            created_at: new Date().toISOString().split('T')[0],
+            updated_at: new Date().toISOString().split('T')[0]
+        };
+        
+        pilgrims.push(newPilgrim);
+        
+        // Create passport document
+        const passportDoc = {
+            id: generateId(),
+            pilgrim_id: newPilgrim.id,
+            type: 'passport',
+            file_url: '',
+            original_name: 'passport.pdf',
+            status: 'preparing',
+            uploaded_by_user_id: users.find(u => u.role === currentRole)?.id || 1,
+            uploaded_at: new Date().toISOString().split('T')[0]
+        };
+        documents.push(passportDoc);
+        
+        // Create prepayment
+        const payment = {
+            id: generateId(),
+            pilgrim_id: newPilgrim.id,
+            type: 'prepayment',
+            amount_usd: prepayment,
+            paid_at: new Date().toISOString().split('T')[0],
+            created_by_user_id: users.find(u => u.role === currentRole)?.id || 1,
+            comment: 'Первая предоплата'
+        };
+        payments.push(payment);
+        
+        closeModal('createPilgrimModal');
+        selectedGroupId = groupId;
+        selectedPilgrimId = newPilgrim.id;
+        renderGroupsAndPilgrims();
+        renderPilgrimsList();
+        renderSelectedPilgrim();
+        renderDashboard();
+        
+        // Reset form
+        document.getElementById('pilgrimFullName').value = '';
+        document.getElementById('pilgrimPhone').value = '';
+        document.getElementById('pilgrimPrepayment').value = '500';
+        document.getElementById('pilgrimTourPrice').value = '2500';
+    }
+
+    // ==================== TEMPLATE FUNCTIONS ====================
+    function openTemplateModal(templateId = null) {
+        editingTemplateId = templateId;
+        const modal = document.getElementById('createTemplateModal');
+        
+        if (templateId) {
+            const template = message_templates.find(t => t.id === templateId);
+            if (template) {
+                document.getElementById('templateName').value = template.name;
+                document.getElementById('templateTriggerType').value = template.trigger_type;
+                document.getElementById('offsetDays').value = template.offset_days || 0;
+                document.getElementById('offsetHours').value = template.offset_hours || 0;
+                document.getElementById('offsetMinutes').value = template.offset_minutes || 0;
+                document.getElementById('templateDocumentType').value = template.document_type || 'visa';
+                document.getElementById('templateBody').value = template.body;
+                document.getElementById('templateCanAttachFile').checked = template.can_attach_file;
+                document.getElementById('templateIsActive').checked = template.is_active;
+                
+                // Show/hide fields based on trigger type
+                toggleTemplateFields();
+            }
+        } else {
+            // Reset form for new template
+            document.getElementById('templateName').value = '';
+            document.getElementById('templateTriggerType').value = 'time_before_departure';
+            document.getElementById('offsetDays').value = 3;
+            document.getElementById('offsetHours').value = 0;
+            document.getElementById('offsetMinutes').value = 0;
+            document.getElementById('templateDocumentType').value = 'visa';
+            document.getElementById('templateBody').value = '';
+            document.getElementById('templateCanAttachFile').checked = false;
+            document.getElementById('templateIsActive').checked = true;
+            toggleTemplateFields();
+        }
+        
+        openModal('createTemplateModal');
+    }
+
+    function toggleTemplateFields() {
+        const triggerType = document.getElementById('templateTriggerType').value;
+        const timeBasedFields = document.getElementById('timeBasedFields');
+        const docBasedFields = document.getElementById('documentBasedFields');
+        
+        if (triggerType === 'time_before_departure' || triggerType === 'time_before_arrival') {
+            timeBasedFields.style.display = 'grid';
+            docBasedFields.style.display = 'none';
+        } else if (triggerType === 'document_based') {
+            timeBasedFields.style.display = 'none';
+            docBasedFields.style.display = 'block';
+        } else {
+            timeBasedFields.style.display = 'none';
+            docBasedFields.style.display = 'none';
+        }
+    }
+
+    function previewTemplate() {
+        const body = document.getElementById('templateBody').value;
+        const pilgrim = pilgrims[0] || {};
+        const manager = users.find(u => u.id === pilgrim.manager_id);
+        
+        let preview = body
+            .replace(/{name}/g, pilgrim.full_name || 'Иван Иванович')
+            .replace(/{depart_date}/g, pilgrim.depart_date || '2024-05-15')
+            .replace(/{return_date}/g, pilgrim.return_date || '2024-05-25')
+            .replace(/{hotel_name}/g, pilgrim.hotel_name || 'Hilton Makkah')
+            .replace(/{manager_name}/g, manager?.name || 'Нурлан Сервисов')
+            .replace(/{manager_phone}/g, manager?.phone || '+7 (707) 987-65-43');
+        
+        document.getElementById('previewText').textContent = preview;
+        document.getElementById('templatePreview').style.display = 'block';
+    }
+
+    function saveTemplate() {
+        const name = document.getElementById('templateName').value.trim();
+        const triggerType = document.getElementById('templateTriggerType').value;
+        const body = document.getElementById('templateBody').value.trim();
+        
+        if (!name || !body) {
+            alert('Заполните название и текст шаблона');
+            return;
+        }
+        
+        const templateData = {
+            id: editingTemplateId || generateId(),
+            name: name,
+            trigger_type: triggerType,
+            trigger_key: triggerType === 'time_before_departure' ? 'before_departure' : 
+                       triggerType === 'time_before_arrival' ? 'before_arrival' : 
+                       triggerType === 'document_based' ? 'document_ready' : 'manual',
+            offset_days: parseInt(document.getElementById('offsetDays').value) || 0,
+            offset_hours: parseInt(document.getElementById('offsetHours').value) || 0,
+            offset_minutes: parseInt(document.getElementById('offsetMinutes').value) || 0,
+            document_type: triggerType === 'document_based' ? document.getElementById('templateDocumentType').value : null,
+            channel: 'whatsapp',
+            body: body,
+            variables: {},
+            can_attach_file: document.getElementById('templateCanAttachFile').checked,
+            is_active: document.getElementById('templateIsActive').checked,
+            created_at: editingTemplateId ? message_templates.find(t => t.id === editingTemplateId)?.created_at : new Date().toISOString().split('T')[0]
+        };
+        
+        if (editingTemplateId) {
+            const index = message_templates.findIndex(t => t.id === editingTemplateId);
+            if (index !== -1) {
+                message_templates[index] = templateData;
+            }
+        } else {
+            message_templates.push(templateData);
+        }
+        
+        closeModal('createTemplateModal');
+        renderTemplatesPage();
+    }
+
+    function deleteTemplate(templateId) {
+        if (confirm('Удалить этот шаблон?')) {
+            const index = message_templates.findIndex(t => t.id === templateId);
+            if (index !== -1) {
+                message_templates.splice(index, 1);
+                renderTemplatesPage();
+            }
+        }
+    }
+
+    function renderTemplatesPage() {
+        const tbody = document.getElementById('templatesTable').querySelector('tbody');
+        tbody.innerHTML = '';
+        
+        message_templates.forEach(template => {
+            const triggerNames = {
+                'time_before_departure': 'Время до вылета',
+                'time_before_arrival': 'Время до прилёта',
+                'document_based': 'При появлении документа',
+                'manual': 'Вручную'
+            };
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${template.name}</td>
+                <td>${triggerNames[template.trigger_type] || template.trigger_type}</td>
+                <td>${template.channel}</td>
+                <td>${template.is_active ? 'Да' : 'Нет'}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline" onclick="openTemplateModal(${template.id})">Редактировать</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteTemplate(${template.id})">Удалить</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        // Add event listener for trigger type change
+        document.getElementById('templateTriggerType').addEventListener('change', toggleTemplateFields);
+    }
+
+    // ==================== MANAGER FUNCTIONS ====================
+    function openManagerModal(managerId = null) {
+        editingManagerId = managerId;
+        
+        if (managerId) {
+            const manager = users.find(u => u.id === managerId);
+            if (manager) {
+                document.getElementById('managerName').value = manager.name;
+                document.getElementById('managerPhone').value = manager.phone;
+                document.getElementById('managerRole').value = manager.role;
+            }
+        } else {
+            document.getElementById('managerName').value = '';
+            document.getElementById('managerPhone').value = '';
+            document.getElementById('managerRole').value = 'service_manager';
+        }
+        
+        openModal('createManagerModal');
+    }
+
+    function saveManager() {
+        const name = document.getElementById('managerName').value.trim();
+        const phone = document.getElementById('managerPhone').value.trim();
+        const role = document.getElementById('managerRole').value;
+        
+        if (!name || !phone) {
+            alert('Заполните все поля');
+            return;
+        }
+        
+        const managerData = {
+            id: editingManagerId || generateId(),
+            name: name,
+            phone: phone,
+            role: role,
+            created_at: editingManagerId ? users.find(u => u.id === editingManagerId)?.created_at : new Date().toISOString().split('T')[0]
+        };
+        
+        if (editingManagerId) {
+            const index = users.findIndex(u => u.id === editingManagerId);
+            if (index !== -1) {
+                users[index] = managerData;
+            }
+        } else {
+            users.push(managerData);
+        }
+        
+        closeModal('createManagerModal');
+        renderManagersPage();
+        
+        // Update pilgrim manager select
+        populateManagerSelects();
+    }
+
+    function deleteManager(managerId) {
+        if (confirm('Удалить этого менеджера?')) {
+            const index = users.findIndex(u => u.id === managerId);
+            if (index !== -1) {
+                users.splice(index, 1);
+                renderManagersPage();
+                populateManagerSelects();
+            }
+        }
+    }
+
+    function renderManagersPage() {
+        const tbody = document.getElementById('managersTable').querySelector('tbody');
+        tbody.innerHTML = '';
+        
+        users.forEach(user => {
+            const pilgrimCount = pilgrims.filter(p => p.manager_id === user.id).length;
+            const paymentCount = payments.filter(p => p.created_by_user_id === user.id).length;
+            const roleNames = {
+                'admin': 'Админ',
+                'service_manager': 'Сервис',
+                'op': 'ОП',
+                'finance': 'Финансы'
+            };
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.name}</td>
+                <td>${user.phone}</td>
+                <td>${roleNames[user.role] || user.role}</td>
+                <td>${pilgrimCount}</td>
+                <td>${user.role === 'finance' ? paymentCount : '-'}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline" onclick="openManagerModal(${user.id})">Редактировать</button>
+                    ${user.role !== 'admin' ? `<button class="btn btn-sm btn-danger" onclick="deleteManager(${user.id})">Удалить</button>` : ''}
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function populateManagerSelects() {
+        // Populate manager select in pilgrim modal
+        const pilgrimManagerSelect = document.getElementById('pilgrimManager');
+        pilgrimManagerSelect.innerHTML = '';
+        users.filter(u => u.role === 'service_manager').forEach(manager => {
+            const option = document.createElement('option');
+            option.value = manager.id;
+            option.textContent = manager.name;
+            pilgrimManagerSelect.appendChild(option);
+        });
+        
+        // Populate manager select in pilgrim detail
+        if (selectedPilgrimId) {
+            renderSelectedPilgrim();
+        }
+    }
+
+    // ==================== SCHEDULE FUNCTIONS ====================
+    function renderSchedulePage() {
+        // Generate calendar for May 2024
+        const calendar = document.getElementById('calendar');
+        calendar.innerHTML = '';
+        
+        // Calendar headers
+        const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+        days.forEach(day => {
+            const header = document.createElement('div');
+            header.className = 'calendar-header';
+            header.textContent = day;
+            calendar.appendChild(header);
+        });
+        
+        // Generate days (May 2024 starts on Wednesday, so 3 empty cells)
+        for (let i = 0; i < 3; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'calendar-day';
+            calendar.appendChild(emptyDay);
+        }
+        
+        // Generate days 1-31
+        for (let day = 1; day <= 31; day++) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'calendar-day';
+            dayDiv.innerHTML = `<div class="calendar-day-number">${day}</div>`;
+            
+            // Add events for specific days
+            if (day === 10) {
+                dayDiv.innerHTML += `<div class="event">Вылет: Умра-2024-04</div>`;
+            }
+            if (day === 12) {
+                dayDiv.innerHTML += `<div class="event">Сообщение: Напоминание</div>`;
+            }
+            if (day === 15) {
+                dayDiv.innerHTML += `<div class="event">Вылет: Мекка-2024-05</div>`;
+                dayDiv.innerHTML += `<div class="event">Сообщение: Виза</div>`;
+            }
+            if (day === 20) {
+                dayDiv.innerHTML += `<div class="event">Прилёт: Умра-2024-04</div>`;
+            }
+            if (day === 25) {
+                dayDiv.innerHTML += `<div class="event">Прилёт: Мекка-2024-05</div>`;
+            }
+            
+            dayDiv.addEventListener('click', () => showDayEvents(day));
+            calendar.appendChild(dayDiv);
+        }
+        
+        // Show events for today (15th)
+        showDayEvents(15);
+    }
+
+    function showDayEvents(day) {
+        const monthYear = 'Май 2024';
+        document.getElementById('dayEventsTitle').textContent = `События дня: ${day} ${monthYear}`;
+        
+        const eventsContainer = document.getElementById('dayEvents');
+        
+        let eventsHTML = '';
+        if (day === 15) {
+            eventsHTML = `
+                <div class="card mb-2">
+                    <strong>Вылет группы:</strong> Мекка-2024-05<br>
+                    <span class="text-muted">15 паломников, Алматы - Мекка - Медина</span>
+                </div>
+                <div class="card mb-2">
+                    <strong>Запланированные сообщения:</strong><br>
+                    • 10:00 - Напоминание перед вылетом (авто)<br>
+                    • 14:30 - Уведомление о визе (ручное)<br>
+                    • 18:00 - Инструкция по прилёту (авто)
+                </div>
+            `;
+        } else if (day === 10) {
+            eventsHTML = `
+                <div class="card mb-2">
+                    <strong>Вылет группы:</strong> Умра-2024-04<br>
+                    <span class="text-muted">8 паломников, Нур-Султан - Джидда</span>
+                </div>
+            `;
+        } else {
+            eventsHTML = '<p class="text-muted">Нет запланированных событий на этот день.</p>';
+        }
+        
+        eventsContainer.innerHTML = eventsHTML;
+    }
+
+    // ==================== DOCUMENT FUNCTIONS ====================
+    function renderDocumentsPage() {
+        // Populate group filter
+        const groupFilter = document.getElementById('docGroupFilter');
+        groupFilter.innerHTML = '<option value="">Все</option>';
+        service_groups.forEach(group => {
+            const option = document.createElement('option');
+            option.value = group.id;
+            option.textContent = group.name;
+            groupFilter.appendChild(option);
+        });
+        
+        // Populate documents table
+        const tbody = document.getElementById('documentsTable').querySelector('tbody');
+        tbody.innerHTML = '';
+        
+        documents.forEach(doc => {
+            const pilgrim = pilgrims.find(p => p.id === doc.pilgrim_id);
+            const group = pilgrim ? service_groups.find(g => g.id === pilgrim.group_id) : null;
+            const uploadedBy = users.find(u => u.id === doc.uploaded_by_user_id);
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${doc.type}</td>
+                <td>${pilgrim ? pilgrim.full_name : '-'}</td>
+                <td>${group ? group.name : '-'}</td>
+                <td><span class="badge ${doc.status === 'sent' ? 'badge-success' : doc.status === 'ready_to_send' ? 'badge-warning' : 'badge-danger'}">${doc.status}</span></td>
+                <td>${formatDate(doc.uploaded_at)}</td>
+                <td>${uploadedBy ? uploadedBy.name : '-'}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline" onclick="alert('Открыть документ')">Открыть</button>
+                    <button class="btn btn-sm btn-outline">Скачать</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        // Populate pilgrim select in upload modal
+        const pilgrimSelect = document.getElementById('documentPilgrim');
+        pilgrimSelect.innerHTML = '';
+        pilgrims.forEach(p => {
+            const option = document.createElement('option');
+            option.value = p.id;
+            option.textContent = p.full_name;
+            pilgrimSelect.appendChild(option);
+        });
+    }
+
+    function filterDocuments() {
+        // Simple filtering - in a real app this would filter the table
+        alert('Фильтры применены (симуляция)');
+    }
+
+    function saveDocument() {
+        const pilgrimId = parseInt(document.getElementById('documentPilgrim').value);
+        const type = document.getElementById('documentType').value;
+        const status = document.getElementById('documentStatus').value;
+        
+        if (!pilgrimId || !type) {
+            alert('Выберите паломника и тип документа');
+            return;
+        }
+        
+        const newDoc = {
+            id: generateId(),
+            pilgrim_id: pilgrimId,
+            type: type,
+            file_url: '',
+            original_name: 'document.pdf',
+            status: status,
+            uploaded_by_user_id: users.find(u => u.role === currentRole)?.id || 1,
+            uploaded_at: new Date().toISOString().split('T')[0]
+        };
+        
+        documents.push(newDoc);
+        closeModal('uploadDocumentModal');
+        renderDocumentsPage();
+        
+        // If this is a visa for the selected pilgrim, update their detail view
+        if (selectedPilgrimId === pilgrimId && type === 'visa') {
+            renderSelectedPilgrim();
+        }
+    }
+
+    // ==================== PAYMENT FUNCTIONS ====================
+    function savePayment() {
+        const type = document.getElementById('paymentType').value;
+        const amount = parseFloat(document.getElementById('paymentAmount').value);
+        const comment = document.getElementById('paymentComment').value.trim();
+        
+        if (!selectedPilgrimId || isNaN(amount) || amount <= 0) {
+            alert('Выберите паломника и введите сумму');
+            return;
+        }
+        
+        const newPayment = {
+            id: generateId(),
+            pilgrim_id: selectedPilgrimId,
+            type: type,
+            amount_usd: amount,
+            paid_at: new Date().toISOString().split('T')[0],
+            created_by_user_id: users.find(u => u.role === currentRole)?.id || 4,
+            comment: comment || (type === 'prepayment' ? 'Предоплата' : 'Доплата')
+        };
+        
+        payments.push(newPayment);
+        closeModal('addPaymentModal');
+        renderSelectedPilgrim();
+        renderDashboard();
+        
+        // Reset form
+        document.getElementById('paymentAmount').value = '';
+        document.getElementById('paymentComment').value = '';
+    }
+
+    // ==================== SETTINGS FUNCTIONS ====================
+    function saveSettings() {
+        system_settings.min_password_length = parseInt(document.getElementById('minPasswordLength').value);
+        system_settings.require_special_chars = document.getElementById('requireSpecialChars').value === 'true';
+        alert('Настройки сохранены (локально).');
+    }
+
+    function testMessaging() {
+        alert('Тестовая отправка (симуляция): Сообщение отправлено в очередь WhatsApp');
+    }
+
+    // ==================== INITIALIZATION ====================
+    document.addEventListener('DOMContentLoaded', function() {
+        initUI();
+        populateManagerSelects();
+        
+        // Initial population of selects
+        const pilgrimGroupSelect = document.getElementById('pilgrimGroup');
+        pilgrimGroupSelect.innerHTML = '';
+        service_groups.forEach(group => {
+            const option = document.createElement('option');
+            option.value = group.id;
+            option.textContent = group.name;
+            pilgrimGroupSelect.appendChild(option);
+        });
+        
+        // Add event listener for template trigger type change
+        document.getElementById('templateTriggerType').addEventListener('change', toggleTemplateFields);
+    });
+</script>
+</body> </html>

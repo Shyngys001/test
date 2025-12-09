@@ -1,0 +1,3702 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Travel — Service & Visa Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --secondary: #7c3aed;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --neutral: #6b7280;
+            --neutral-light: #f3f4f6;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --text-light: #6b7280;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --sidebar-width: 260px;
+            --header-height: 80px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background-color: rgba(37, 99, 235, 0.9);
+            height: var(--header-height);
+        }
+
+        .header-title h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .role-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 13px;
+            backdrop-filter: blur(4px);
+        }
+
+        .role-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .role-badge.admin {
+            background: var(--primary);
+            color: white;
+        }
+
+        .role-badge.service {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .role-badge.visa {
+            background: var(--success);
+            color: white;
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .sidebar-logo-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .sidebar-logo-sub {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: var(--neutral-light);
+            border-left-color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            background: var(--bg);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(to right, #f9fafb, #f3f4f6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            gap: 1rem;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.primary {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .stat-icon.success {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        .stat-icon.warning {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .stat-icon.secondary {
+            background: #ede9fe;
+            color: var(--secondary);
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Chart */
+        .chart-container {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            padding: 20px 0;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .chart-bar:hover {
+            opacity: 0.8;
+        }
+
+        .chart-bar-label {
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+
+        .chart-bar-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Activity Log */
+        .activity-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            background: var(--neutral-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            color: var(--text);
+            text-align: left;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Three Column Layout */
+        .three-column {
+            display: grid;
+            grid-template-columns: 280px 1fr 360px;
+            gap: 1.5rem;
+            height: calc(100vh - var(--header-height) - 6rem);
+        }
+
+        @media (max-width: 1400px) {
+            .three-column {
+                grid-template-columns: 240px 1fr 300px;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .three-column {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+
+        .column {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .column-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            background: linear-gradient(to right, #f9fafb, #f3f4f6);
+        }
+
+        .column-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .column-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        /* List Items */
+        .list-item {
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 8px;
+            border: 1px solid transparent;
+        }
+
+        .list-item:hover {
+            background: var(--neutral-light);
+            border-color: var(--border);
+        }
+
+        .list-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .list-item-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .list-item-sub {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .list-item.active .list-item-sub {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Pilgrim List Item */
+        .pilgrim-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 8px;
+            border: 1px solid transparent;
+        }
+
+        .pilgrim-item:hover {
+            background: var(--neutral-light);
+            border-color: var(--border);
+        }
+
+        .pilgrim-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .pilgrim-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--primary);
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+
+        .pilgrim-item.active .pilgrim-avatar {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .pilgrim-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .pilgrim-name {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pilgrim-passport {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .pilgrim-item.active .pilgrim-passport {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Pilgrim Card */
+        .pilgrim-card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .pilgrim-card-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .pilgrim-card-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .pilgrim-card-id {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .pilgrim-card-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .pilgrim-card-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .info-value {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .pilgrim-card-actions {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .badge-success { background: #d1fae5; color: var(--success); }
+        .badge-warning { background: #fef3c7; color: var(--warning); }
+        .badge-danger { background: #fee2e2; color: var(--danger); }
+        .badge-primary { background: var(--primary-light); color: var(--primary); }
+        .badge-secondary { background: #ede9fe; color: var(--secondary); }
+        .badge-neutral { background: var(--neutral-light); color: var(--neutral); }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--neutral-light);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #047857;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background: var(--neutral-light);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-icon {
+            padding: 8px;
+            width: 36px;
+            height: 36px;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card);
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--neutral-light);
+        }
+
+        td {
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        tr:hover td {
+            background: var(--neutral-light);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            width: 100%;
+            background: var(--card);
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.95) translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(to right, #f9fafb, #f3f4f6);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--neutral-light);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            background: linear-gradient(to right, #f9fafb, #f3f4f6);
+        }
+
+        /* Calendar */
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .calendar-month {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .calendar-weekday {
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            min-height: 80px;
+            padding: 8px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-day.other-month {
+            background: var(--neutral-light);
+            color: var(--text-light);
+        }
+
+        .calendar-day.today {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .calendar-day-number {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .calendar-events {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .calendar-event {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .calendar-event.departure {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .calendar-event.arrival {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        /* Settings */
+        .settings-section {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .settings-section-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(to right, #f9fafb, #f3f4f6);
+        }
+
+        .settings-section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .settings-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .settings-section-body {
+            padding: 1.5rem;
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .setting-desc {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        /* Toggle Switch */
+        .toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--border);
+            border-radius: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background: var(--primary);
+        }
+
+        .toggle input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        .toast-success { border-left-color: var(--success); }
+        .toast-error { border-left-color: var(--danger); }
+        .toast-warning { border-left-color: var(--warning); }
+        .toast-info { border-left-color: var(--primary); }
+
+        .toast-message {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .toast-close:hover {
+            color: var(--text);
+        }
+
+        /* Search Input */
+        .search-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-input-wrapper input {
+            padding-left: 36px;
+            width: 100%;
+        }
+
+        .search-input-wrapper::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: var(--text-light);
+            z-index: 1;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+        }
+
+        /* Visa Status Chart */
+        .visa-chart {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .visa-chart-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .visa-chart-bar {
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .visa-chart-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .visa-chart-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                height: auto;
+            }
+            
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: fixed;
+                top: var(--header-height);
+                left: 0;
+                height: calc(100vh - var(--header-height));
+                z-index: 100;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-day {
+                min-height: 60px;
+            }
+            
+            .calendar-event {
+                font-size: 8px;
+            }
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 4px;
+            background: var(--neutral-light);
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 16px;
+            text-align: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+            border: none;
+            background: transparent;
+        }
+
+        .tab:hover {
+            color: var(--text);
+        }
+
+        .tab.active {
+            background: var(--card);
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Document List */
+        .document-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--neutral-light);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .document-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--card);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .document-info {
+            flex: 1;
+        }
+
+        .document-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .document-meta {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        /* OCR Status */
+        .ocr-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .ocr-status.new {
+            background: var(--neutral-light);
+            color: var(--neutral);
+        }
+
+        .ocr-status.ocr_done {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .ocr-status.checked {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        /* File Input */
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 14px;
+            background: var(--neutral-light);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-input-label:hover {
+            background: var(--border);
+            border-color: var(--primary);
+        }
+
+        /* Help Text */
+        .help-text {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        /* Visa Status Badge */
+        .visa-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .visa-status-badge.none {
+            background: var(--neutral-light);
+            color: var(--neutral);
+        }
+
+        .visa-status-badge.pending {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .visa-status-badge.approved {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            padding: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-title">
+            <h1>Atlas Travel — Service & Visa Hub</h1>
+            <p>Сервисная автоматизация · Визовый контур · Единая база паломников</p>
+        </div>
+        <div class="header-controls">
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+            <div class="role-selector">
+                <span>Роль:</span>
+                <span class="role-badge admin" id="currentRole">Администратор</span>
+                <button class="header-btn" onclick="toggleRole()">🔄</button>
+            </div>
+            <button class="header-btn">
+                🔔
+                <span class="notification-badge"></span>
+            </button>
+            <button class="header-btn">❓</button>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">✈</div>
+                <div>
+                    <div class="sidebar-logo-text">Atlas Travel</div>
+                    <div class="sidebar-logo-sub">Service & Visa Hub</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" onclick="showPage('dashboard', this); return false;">
+                    <span class="nav-icon">📊</span>
+                    Дашборд
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('groups', this); return false;">
+                    <span class="nav-icon">👥</span>
+                    Группы и паломники
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('templates', this); return false;">
+                    <span class="nav-icon">📄</span>
+                    Шаблоны
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('managers', this); return false;">
+                    <span class="nav-icon">👤</span>
+                    Менеджеры
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('schedule', this); return false;">
+                    <span class="nav-icon">📅</span>
+                    Расписание
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('settings', this); return false;">
+                    <span class="nav-icon">⚙</span>
+                    Настройки системы
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">АК</div>
+                    <div>
+                        <div class="user-name">Александр Козлов</div>
+                        <div class="user-role">Администратор</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div class="page active" id="page-dashboard">
+                <div class="content-header">
+                    <div>
+                        <h1 class="page-title">Дашборд</h1>
+                        <p class="page-subtitle">Добро пожаловать! Вот что происходит с вашими группами паломников</p>
+                    </div>
+                    <div class="action-bar">
+                        <button class="btn btn-primary" onclick="openModal('groupModal')">
+                            <span>📁</span>
+                            Новая группа
+                        </button>
+                        <button class="btn btn-secondary" onclick="quickReport()">
+                            <span>📊</span>
+                            Быстрый отчет
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="statTotalPilgrims">0</div>
+                            <div class="stat-label">Всего паломников</div>
+                            <div class="stat-change positive">↑ +127 за неделю</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon success">✓</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="statReady">0</div>
+                            <div class="stat-label">Готово к вылету</div>
+                            <div class="stat-change positive">71.5%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon warning">⏳</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="statPending">0</div>
+                            <div class="stat-label">В ожидании виз</div>
+                            <div class="stat-change">22.8%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon secondary">📅</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="statUpcoming">0</div>
+                            <div class="stat-label">Ближайшие группы</div>
+                            <div class="stat-change positive">+3 новые</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Статистика по месяцам</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" id="monthlyChart"></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Быстрые действия</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="quick-action-btn" onclick="openModal('pilgrimModal')">
+                                    ➕ Добавить паломника
+                                </button>
+                                <button class="quick-action-btn" onclick="openModal('groupModal')">
+                                    📁 Создать группу
+                                </button>
+                                <button class="quick-action-btn" onclick="showPage('templates', document.querySelector('.nav-item:nth-child(3)'))">
+                                    📄 Шаблоны
+                                </button>
+                                <button class="quick-action-btn" onclick="showPage('schedule', document.querySelector('.nav-item:nth-child(5)'))">
+                                    📅 Расписание
+                                </button>
+                            </div>
+
+                            <div style="margin-top: 24px;">
+                                <div class="info-section-title">Статус виз</div>
+                                <div class="visa-chart">
+                                    <div class="visa-chart-item">
+                                        <div class="visa-chart-bar" style="background: var(--success);"></div>
+                                        <div class="visa-chart-value" id="visaApprovedCount">0</div>
+                                        <div class="visa-chart-label">Одобрено</div>
+                                    </div>
+                                    <div class="visa-chart-item">
+                                        <div class="visa-chart-bar" style="background: var(--warning);"></div>
+                                        <div class="visa-chart-value" id="visaPendingCount">0</div>
+                                        <div class="visa-chart-label">В ожидании</div>
+                                    </div>
+                                    <div class="visa-chart-item">
+                                        <div class="visa-chart-bar" style="background: var(--neutral);"></div>
+                                        <div class="visa-chart-value" id="visaNoneCount">0</div>
+                                        <div class="visa-chart-label">Нет подачи</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Журнал активности</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="showAllActivities()">Показать все</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list" id="activityList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Groups & Pilgrims Page -->
+            <div class="page" id="page-groups">
+                <div class="content-header">
+                    <div>
+                        <h1 class="page-title">Группы и паломники</h1>
+                        <p class="page-subtitle">Управление группами и данными паломников</p>
+                    </div>
+                    <div class="action-bar">
+                        <button class="btn btn-primary" onclick="openModal('groupModal')">
+                            <span>➕</span>
+                            Новая группа
+                        </button>
+                        <button class="btn btn-secondary" onclick="openModal('pilgrimModal')">
+                            <span>👤</span>
+                            Добавить паломника
+                        </button>
+                    </div>
+                </div>
+
+                <div class="three-column">
+                    <!-- Column 1: Groups List -->
+                    <div class="column">
+                        <div class="column-header">
+                            <span class="column-title">Группы <span id="groupsCount">(0)</span></span>
+                            <button class="btn btn-primary btn-sm" onclick="openModal('groupModal')">+</button>
+                        </div>
+                        <div class="column-body" id="groupsList"></div>
+                    </div>
+
+                    <!-- Column 2: Pilgrims List -->
+                    <div class="column">
+                        <div class="column-header">
+                            <span class="column-title" id="pilgrimsTitle">Паломники</span>
+                            <button class="btn btn-primary btn-sm" onclick="openModal('pilgrimModal')">+ Добавить</button>
+                        </div>
+                        <div style="padding: 12px; border-bottom: 1px solid var(--border);">
+                            <div class="search-input-wrapper">
+                                <input type="text" class="form-input" placeholder="Поиск паломников..." id="pilgrimSearch" oninput="filterPilgrims()">
+                            </div>
+                        </div>
+                        <div class="column-body" id="pilgrimsList"></div>
+                    </div>
+
+                    <!-- Column 3: Pilgrim Card -->
+                    <div class="column" id="pilgrimCard">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👤</div>
+                            <div class="empty-state-text">Выберите паломника для просмотра</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Templates Page -->
+            <div class="page" id="page-templates">
+                <div class="content-header">
+                    <div>
+                        <h1 class="page-title">Шаблоны</h1>
+                        <p class="page-subtitle">Управление шаблонами документов, сообщений и процессов</p>
+                    </div>
+                    <div class="action-bar">
+                        <button class="btn btn-primary" onclick="openModal('templateModal')">
+                            <span>➕</span>
+                            Новый шаблон
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(this, 'message')">Шаблоны сообщений</button>
+                    <button class="tab" onclick="switchTab(this, 'document')">Шаблоны документов</button>
+                    <button class="tab" onclick="switchTab(this, 'process')">Шаблоны процессов</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" id="templatesTitle">Шаблоны сообщений</h3>
+                        <div class="action-bar">
+                            <input type="text" class="form-input" placeholder="Поиск шаблонов..." style="width: 200px;">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Название</th>
+                                        <th>Тип</th>
+                                        <th>Триггер</th>
+                                        <th>Канал</th>
+                                        <th>Статус</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="templatesTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Managers Page -->
+            <div class="page" id="page-managers">
+                <div class="content-header">
+                    <div>
+                        <h1 class="page-title">Менеджеры</h1>
+                        <p class="page-subtitle">Управление сервисными и визовыми менеджерами</p>
+                    </div>
+                    <div class="action-bar">
+                        <button class="btn btn-primary" onclick="openModal('managerModal')">
+                            <span>➕</span>
+                            Добавить менеджера
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Список менеджеров</h3>
+                        <div class="action-bar">
+                            <input type="text" class="form-input" placeholder="Поиск менеджеров..." style="width: 200px;">
+                            <select class="form-select" id="managerRoleFilter" onchange="filterManagers()" style="width: 150px;">
+                                <option value="">Все роли</option>
+                                <option value="admin">Администратор</option>
+                                <option value="service">Сервис менеджер</option>
+                                <option value="visa">Виза менеджер</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Имя</th>
+                                        <th>Телефон</th>
+                                        <th>Email</th>
+                                        <th>Роль</th>
+                                        <th>Групп / Заявок</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="managersTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Page -->
+            <div class="page" id="page-schedule">
+                <div class="content-header">
+                    <div>
+                        <h1 class="page-title">Расписание</h1>
+                        <p class="page-subtitle">Управление расписанием вылетов и прилетов</p>
+                    </div>
+                    <div class="action-bar">
+                        <button class="btn btn-primary" onclick="openModal('eventModal')">
+                            <span>➕</span>
+                            Новое событие
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="calendar-nav">
+                            <button class="btn btn-secondary btn-icon" onclick="changeMonth(-1)">◀</button>
+                            <span class="calendar-month" id="calendarMonth"></span>
+                            <button class="btn btn-secondary btn-icon" onclick="changeMonth(1)">▶</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="calendar-grid" id="calendarGrid"></div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Ближайшие вылеты</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Группа</th>
+                                        <th>Дата вылета</th>
+                                        <th>Дата возврата</th>
+                                        <th>Паломников</th>
+                                        <th>Статус</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="upcomingDeparturesTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div class="page" id="page-settings">
+                <div class="content-header">
+                    <div>
+                        <h1 class="page-title">Настройки системы</h1>
+                        <p class="page-subtitle">Конфигурация системы и параметры</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Настройки OCR</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">API ключ OCR</label>
+                                    <input type="password" class="form-input" value="••••••••••••••••" id="ocrApiKey">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Endpoint</label>
+                                    <input type="text" class="form-input" value="https://ocr.atlas-travel.com/api" id="ocrEndpoint">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Язык распознавания</label>
+                                    <select class="form-select" id="ocrLanguage">
+                                        <option value="ru">Русский</option>
+                                        <option value="en">Английский</option>
+                                        <option value="ar">Арабский</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary mt-2" onclick="testOCRConnection()">Проверить подключение</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Настройки почты (SMTP)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">SMTP сервер</label>
+                                    <input type="text" class="form-input" value="smtp.example.com" id="smtpHost">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Порт</label>
+                                    <input type="text" class="form-input" value="587" id="smtpPort">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Логин</label>
+                                    <input type="text" class="form-input" value="noreply@atlas-travel.com" id="smtpLogin">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Пароль</label>
+                                    <input type="password" class="form-input" value="••••••••" id="smtpPassword">
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary mt-2" onclick="sendTestEmail()">Тестовое письмо</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Настройки мессенджеров</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">WhatsApp API ключ</label>
+                                    <input type="password" class="form-input" value="••••••••••••••••" id="whatsappApiKey">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">WhatsApp Endpoint</label>
+                                    <input type="text" class="form-input" value="https://whatsapp-api.atlas-travel.com" id="whatsappEndpoint">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Telegram Bot Token</label>
+                                    <input type="password" class="form-input" value="••••••••••••••••" id="telegramToken">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Безопасность</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Минимальная длина пароля</label>
+                                    <input type="number" class="form-input" value="8" id="minPasswordLength">
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <div class="setting-name">Двухфакторная аутентификация</div>
+                                        <div class="setting-desc">Требовать 2FA для всех пользователей</div>
+                                    </div>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="require2FA">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <div class="setting-name">Журналирование действий</div>
+                                        <div class="setting-desc">Записывать все действия пользователей</div>
+                                    </div>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="enableAuditLog" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-100 mt-3" onclick="saveSettings()">
+                    💾 Сохранить все настройки
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Pilgrim Modal -->
+    <div class="modal-overlay" id="pilgrimModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Добавить паломника</h3>
+                <button class="modal-close" onclick="closeModal('pilgrimModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Фамилия</label>
+                        <input type="text" class="form-input" id="pilgrimLastName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Имя</label>
+                        <input type="text" class="form-input" id="pilgrimFirstName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Отчество</label>
+                        <input type="text" class="form-input" id="pilgrimMiddleName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Телефон</label>
+                        <input type="tel" class="form-input" id="pilgrimPhone">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Мессенджер</label>
+                        <select class="form-select" id="pilgrimMessenger">
+                            <option value="whatsapp">WhatsApp</option>
+                            <option value="telegram">Telegram</option>
+                            <option value="sms">SMS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Группа</label>
+                        <select class="form-select" id="pilgrimGroup"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('pilgrimModal')">Отмена</button>
+                <button class="btn btn-primary" onclick="savePilgrim()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Modal -->
+    <div class="modal-overlay" id="groupModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Создать группу</h3>
+                <button class="modal-close" onclick="closeModal('groupModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Название группы</label>
+                        <input type="text" class="form-input" id="groupName" placeholder="Например: Умра Март 2024">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Маршрут</label>
+                        <input type="text" class="form-input" id="groupRoute" placeholder="Например: Москва - Медина - Мекка">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Дата вылета</label>
+                        <input type="date" class="form-input" id="groupDeparture">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Дата возврата</label>
+                        <input type="date" class="form-input" id="groupReturn">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Сервис менеджер</label>
+                        <select class="form-select" id="groupManager"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('groupModal')">Отмена</button>
+                <button class="btn btn-primary" onclick="saveGroup()">Создать</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manager Modal -->
+    <div class="modal-overlay" id="managerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="managerModalTitle">Добавить менеджера</h3>
+                <button class="modal-close" onclick="closeModal('managerModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Имя</label>
+                        <input type="text" class="form-input" id="managerName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Фамилия</label>
+                        <input type="text" class="form-input" id="managerLastName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Телефон</label>
+                        <input type="tel" class="form-input" id="managerPhone">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="managerEmail">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Роль</label>
+                        <select class="form-select" id="managerRole">
+                            <option value="admin">Администратор</option>
+                            <option value="service">Сервис менеджер</option>
+                            <option value="visa">Виза менеджер</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Язык интерфейса</label>
+                        <select class="form-select" id="managerLanguage">
+                            <option value="ru">Русский</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('managerModal')">Отмена</button>
+                <button class="btn btn-primary" onclick="saveManager()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Modal -->
+    <div class="modal-overlay" id="templateModal">
+        <div class="modal" style="max-width: 640px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Создать шаблон</h3>
+                <button class="modal-close" onclick="closeModal('templateModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Название шаблона</label>
+                        <input type="text" class="form-input" id="templateName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Тип</label>
+                        <select class="form-select" id="templateType" onchange="updateTemplateFields()">
+                            <option value="message">Сообщение</option>
+                            <option value="document">Документ</option>
+                            <option value="process">Процесс</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Триггер</label>
+                        <select class="form-select" id="templateTrigger">
+                            <option value="status_change">Изменение статуса</option>
+                            <option value="document_uploaded">Загрузка документа</option>
+                            <option value="time_based">По времени</option>
+                            <option value="manual">Вручную</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ключ события</label>
+                        <input type="text" class="form-input" id="templateTriggerKey" placeholder="Например: visa_approved">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Канал</label>
+                        <select class="form-select" id="templateChannel">
+                            <option value="whatsapp">WhatsApp</option>
+                            <option value="telegram">Telegram</option>
+                            <option value="sms">SMS</option>
+                            <option value="email">Email</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Текст шаблона</label>
+                        <textarea class="form-textarea" id="templateContent" rows="6" placeholder="Используйте {name}, {depart_date} и другие переменные..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="previewTemplate()">👁 Предпросмотр</button>
+                <button class="btn btn-secondary" onclick="closeModal('templateModal')">Отмена</button>
+                <button class="btn btn-primary" onclick="saveTemplate()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Создать событие</h3>
+                <button class="modal-close" onclick="closeModal('eventModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Название события</label>
+                        <input type="text" class="form-input" id="eventName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Тип</label>
+                        <select class="form-select" id="eventType">
+                            <option value="departure">Вылет</option>
+                            <option value="arrival">Прилёт</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Дата</label>
+                        <input type="date" class="form-input" id="eventDate">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Время</label>
+                        <input type="time" class="form-input" id="eventTime">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Связанные группы</label>
+                        <select class="form-select" id="eventGroup" multiple style="height: 100px;"></select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Комментарий</label>
+                        <textarea class="form-textarea" id="eventNote"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('eventModal')">Отмена</button>
+                <button class="btn btn-primary" onclick="saveEvent()">Создать</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ==================== DATA MODEL ====================
+        let currentRole = 'admin'; // admin, service, visa
+        let users = [
+            { id: 1, name: "Александр", lastName: "Козлов", phone: "+7 999 555-66-77", email: "admin@atlas.com", role: "admin", language: "ru", created_at: "2024-01-15" },
+            { id: 2, name: "Мария", lastName: "Петрова", phone: "+7 999 111-22-33", email: "petrov@atlas.com", role: "service", language: "ru", created_at: "2024-02-20", groups_count: 8 },
+            { id: 3, name: "Иван", lastName: "Сидоров", phone: "+7 999 222-33-44", email: "sidorov@atlas.com", role: "service", language: "ru", created_at: "2024-03-10", groups_count: 6 },
+            { id: 4, name: "Елена", lastName: "Козлова", phone: "+7 999 333-44-55", email: "kozlova@atlas.com", role: "visa", language: "ru", created_at: "2024-03-15", visas_count: 145 },
+            { id: 5, name: "Дмитрий", lastName: "Волков", phone: "+7 999 444-55-66", email: "volkov@atlas.com", role: "visa", language: "ru", created_at: "2024-04-05", visas_count: 98 }
+        ];
+
+        let service_groups = [
+            { id: 1, name: "Умра Декабрь 2024", route: "Москва - Медина - Мекка", depart_date: "2024-12-15", return_date: "2024-12-25", status: "active", manager_id: 2, created_at: "2024-09-10", pilgrims: [1, 2, 3] },
+            { id: 2, name: "Хадж 2025 - Группа А", route: "Стамбул - Джидда - Мекка", depart_date: "2025-06-01", return_date: "2025-06-20", status: "preparing", manager_id: 3, created_at: "2024-10-15", pilgrims: [4, 5] },
+            { id: 3, name: "Умра Январь 2025", route: "Дубай - Медина - Мекка", depart_date: "2025-01-10", return_date: "2025-01-20", status: "active", manager_id: 2, created_at: "2024-11-05", pilgrims: [6] },
+            { id: 4, name: "Хадж 2025 - Группа Б", route: "Астана - Джидда - Мекка", depart_date: "2025-06-05", return_date: "2025-06-25", status: "preparing", manager_id: 2, created_at: "2024-11-20", pilgrims: [] },
+            { id: 5, name: "Умра Февраль 2025", route: "Москва - Медина - Мекка", depart_date: "2025-02-14", return_date: "2025-02-24", status: "active", manager_id: 3, created_at: "2024-12-01", pilgrims: [] }
+        ];
+
+        let pilgrims = [
+            { 
+                id: 1, 
+                group_id: 1, 
+                full_name: "Алиев Ахмед Рустамович", 
+                phone: "+7 999 123-45-67", 
+                messenger: "whatsapp",
+                status: "active",
+                depart_date: "2024-12-15",
+                return_date: "2024-12-25",
+                passport: {
+                    number: "75 1234567",
+                    citizenship: "РФ",
+                    birth_date: "1985-03-20",
+                    gender: "Муж",
+                    issue_date: "2018-05-15",
+                    expiry_date: "2028-05-15",
+                    authority: "УФМС России",
+                    photo_url: null,
+                    ocr_status: "checked",
+                    verified: true
+                },
+                visa: {
+                    status: "approved",
+                    hasInsurance: true
+                },
+                documents: [
+                    { id: 1, type: "passport", uploaded_at: "2024-11-20", uploaded_by: "Мария Петрова" },
+                    { id: 2, type: "visa", uploaded_at: "2024-12-01", uploaded_by: "Елена Козлова" },
+                    { id: 3, type: "insurance", uploaded_at: "2024-11-25", uploaded_by: "Мария Петрова" }
+                ]
+            },
+            { 
+                id: 2, 
+                group_id: 1, 
+                full_name: "Исмаилова Фатима Маратовна", 
+                phone: "+7 999 234-56-78", 
+                messenger: "telegram",
+                status: "active",
+                depart_date: "2024-12-15",
+                return_date: "2024-12-25",
+                passport: {
+                    number: "75 2345678",
+                    citizenship: "РФ",
+                    birth_date: "1990-07-15",
+                    gender: "Жен",
+                    issue_date: "2017-08-22",
+                    expiry_date: "2027-08-22",
+                    authority: "УФМС России",
+                    photo_url: null,
+                    ocr_status: "ocr_done",
+                    verified: false
+                },
+                visa: {
+                    status: "pending",
+                    hasInsurance: true
+                },
+                documents: [
+                    { id: 4, type: "passport", uploaded_at: "2024-11-22", uploaded_by: "Мария Петрова" }
+                ]
+            },
+            { 
+                id: 3, 
+                group_id: 1, 
+                full_name: "Хасанов Мустафа Рашидович", 
+                phone: "+7 999 345-67-89", 
+                messenger: "whatsapp",
+                status: "active",
+                depart_date: "2024-12-15",
+                return_date: "2024-12-25",
+                passport: {
+                    number: "75 3456789",
+                    citizenship: "РФ",
+                    birth_date: "1978-12-05",
+                    gender: "Муж",
+                    issue_date: "2016-11-30",
+                    expiry_date: "2026-11-30",
+                    authority: "УФМС России",
+                    photo_url: null,
+                    ocr_status: "new",
+                    verified: false
+                },
+                visa: {
+                    status: "none",
+                    hasInsurance: false
+                },
+                documents: [
+                    { id: 5, type: "passport", uploaded_at: "2024-11-25", uploaded_by: "Иван Сидоров" }
+                ]
+            },
+            { 
+                id: 4, 
+                group_id: 2, 
+                full_name: "Гаджиева Амина Магомедовна", 
+                phone: "+7 999 456-78-90", 
+                messenger: "whatsapp",
+                status: "active",
+                depart_date: "2025-06-01",
+                return_date: "2025-06-20",
+                passport: {
+                    number: "75 4567890",
+                    citizenship: "РФ",
+                    birth_date: "1995-04-10",
+                    gender: "Жен",
+                    issue_date: "2019-02-18",
+                    expiry_date: "2029-02-18",
+                    authority: "МВД России",
+                    photo_url: null,
+                    ocr_status: "checked",
+                    verified: true
+                },
+                visa: {
+                    status: "approved",
+                    hasInsurance: true
+                },
+                documents: [
+                    { id: 6, type: "passport", uploaded_at: "2024-11-18", uploaded_by: "Иван Сидоров" },
+                    { id: 7, type: "visa", uploaded_at: "2024-12-03", uploaded_by: "Елена Козлова" }
+                ]
+            },
+            { 
+                id: 5, 
+                group_id: 2, 
+                full_name: "Магомедов Рустам Ахмедович", 
+                phone: "+7 999 567-89-01", 
+                messenger: "telegram",
+                status: "active",
+                depart_date: "2025-06-01",
+                return_date: "2025-06-20",
+                passport: {
+                    number: "75 5678901",
+                    citizenship: "РФ",
+                    birth_date: "1982-09-28",
+                    gender: "Муж",
+                    issue_date: "2017-06-25",
+                    expiry_date: "2027-06-25",
+                    authority: "МВД России",
+                    photo_url: null,
+                    ocr_status: "checked",
+                    verified: true
+                },
+                visa: {
+                    status: "pending",
+                    hasInsurance: false
+                },
+                documents: [
+                    { id: 8, type: "passport", uploaded_at: "2024-11-20", uploaded_by: "Иван Сидоров" }
+                ]
+            },
+            { 
+                id: 6, 
+                group_id: 3, 
+                full_name: "Абдуллаева Зарема Исламовна", 
+                phone: "+7 999 678-90-12", 
+                messenger: "whatsapp",
+                status: "active",
+                depart_date: "2025-01-10",
+                return_date: "2025-01-20",
+                passport: {
+                    number: "75 6789012",
+                    citizenship: "РФ",
+                    birth_date: "1988-01-17",
+                    gender: "Жен",
+                    issue_date: "2018-09-12",
+                    expiry_date: "2028-09-12",
+                    authority: "МВД России",
+                    photo_url: null,
+                    ocr_status: "checked",
+                    verified: true
+                },
+                visa: {
+                    status: "approved",
+                    hasInsurance: true
+                },
+                documents: [
+                    { id: 9, type: "passport", uploaded_at: "2024-11-22", uploaded_by: "Мария Петрова" },
+                    { id: 10, type: "visa", uploaded_at: "2024-12-05", uploaded_by: "Елена Козлова" },
+                    { id: 11, type: "insurance", uploaded_at: "2024-11-28", uploaded_by: "Мария Петрова" }
+                ]
+            }
+        ];
+
+        let templates = [
+            { id: 1, name: "Приглашение на Умру", type: "message", trigger_type: "manual", trigger_key: "invitation", channel: "whatsapp", body: "Уважаемый {name}, приглашаем вас в поездку {route} {depart_date}.", is_active: true, created_at: "2024-12-01" },
+            { id: 2, name: "SMS: Виза одобрена", type: "message", trigger_type: "status_change", trigger_key: "visa_approved", channel: "sms", body: "{name}, ваша виза одобрена! Файл во вложении.", is_active: true, created_at: "2024-11-28" },
+            { id: 3, name: "Чек-лист документов", type: "document", trigger_type: "manual", trigger_key: "checklist", channel: "email", body: "Список документов для {trip_type}...", is_active: true, created_at: "2024-11-25" },
+            { id: 4, name: "Процесс оформления визы", type: "process", trigger_type: "time_based", trigger_key: "visa_process", channel: "email", body: "Шаг 1: Сбор документов...", is_active: true, created_at: "2024-11-20" },
+            { id: 5, name: "Email: Напоминание", type: "message", trigger_type: "time_based", trigger_key: "reminder", channel: "email", body: "Напоминаем о необходимости предоставить документы.", is_active: false, created_at: "2024-11-15" }
+        ];
+
+        let calendar_events = [
+            { id: 1, name: "Вылет Умра Декабрь", type: "departure", date: "2024-12-15", time: "08:30", group_ids: [1], note: "Аэропорт Шереметьево, терминал D" },
+            { id: 2, name: "Прилёт Умра Декабрь", type: "arrival", date: "2024-12-25", time: "22:15", group_ids: [1], note: "Аэропорт Шереметьево" },
+            { id: 3, name: "Вылет Умра Январь", type: "departure", date: "2025-01-10", time: "10:45", group_ids: [3], note: "Аэропорт Домодедово" }
+        ];
+
+        let activities = [
+            { id: 1, icon: "👤", color: "var(--primary)", text: "Добавлен новый паломник: Ахмед Алиев", time: "5 минут назад" },
+            { id: 2, icon: "✓", color: "var(--success)", text: "Виза одобрена: Фатима Исмаилова", time: "15 минут назад" },
+            { id: 3, icon: "📄", color: "var(--secondary)", text: "Обновлён шаблон: Приглашение на Умру", time: "1 час назад" },
+            { id: 4, icon: "📁", color: "var(--warning)", text: "Создана группа: Умра Март 2025", time: "2 часа назад" },
+            { id: 5, icon: "🔔", color: "var(--primary)", text: "Отправлено уведомление группе Хадж 2025", time: "3 часа назад" },
+            { id: 6, icon: "👤", color: "var(--primary)", text: "Новый менеджер: Елена Козлова", time: "Вчера" }
+        ];
+
+        let system_settings = {
+            ocr: {
+                api_key: "••••••••••••••••",
+                endpoint: "https://ocr.atlas-travel.com/api",
+                language: "ru"
+            },
+            smtp: {
+                host: "smtp.example.com",
+                port: "587",
+                login: "noreply@atlas-travel.com",
+                password: "••••••••",
+                from: "noreply@atlas-travel.com"
+            },
+            messengers: {
+                whatsapp_api_key: "••••••••••••••••",
+                whatsapp_endpoint: "https://whatsapp-api.atlas-travel.com",
+                telegram_token: "••••••••••••••••"
+            },
+            security: {
+                min_password_length: 8,
+                require_2fa: false,
+                enable_audit_log: true
+            }
+        };
+
+        // State Management
+        let selectedGroup = null;
+        let selectedPilgrim = null;
+        let editingManagerId = null;
+        let editingTemplateId = null;
+        let currentMonth = new Date();
+        let currentTemplateTab = 'message';
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDashboardStats();
+            renderGroupsList();
+            renderManagersTable();
+            renderTemplatesTable();
+            renderActivityList();
+            renderChart();
+            renderCalendar();
+            populateGroupSelects();
+            populateManagerSelects();
+            updateRoleBadge();
+            renderUpcomingDepartures();
+        });
+
+        // ==================== NAVIGATION ====================
+        function showPage(pageId, navItem) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (navItem) navItem.classList.add('active');
+            
+            const titles = {
+                'dashboard': 'Дашборд',
+                'groups': 'Группы и паломники',
+                'templates': 'Шаблоны',
+                'managers': 'Менеджеры',
+                'schedule': 'Расписание',
+                'settings': 'Настройки системы'
+            };
+            
+            document.querySelector('.page-title').textContent = titles[pageId];
+            
+            // Load page-specific data
+            loadPageData(pageId);
+            
+            // Close mobile sidebar
+            document.getElementById('sidebar').classList.remove('open');
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function toggleRole() {
+            const roles = ['admin', 'service', 'visa'];
+            const roleNames = {
+                'admin': 'Администратор',
+                'service': 'Сервис менеджер',
+                'visa': 'Виза менеджер'
+            };
+            
+            const currentIndex = roles.indexOf(currentRole);
+            currentRole = roles[(currentIndex + 1) % roles.length];
+            
+            const roleBadge = document.getElementById('currentRole');
+            roleBadge.textContent = roleNames[currentRole];
+            roleBadge.className = `role-badge ${currentRole}`;
+            
+            showToast(`Роль изменена на: ${roleNames[currentRole]}`, 'info');
+        }
+
+        function updateRoleBadge() {
+            const roleNames = {
+                'admin': 'Администратор',
+                'service': 'Сервис менеджер',
+                'visa': 'Виза менеджер'
+            };
+            
+            const roleBadge = document.getElementById('currentRole');
+            roleBadge.textContent = roleNames[currentRole];
+            roleBadge.className = `role-badge ${currentRole}`;
+        }
+
+        function loadPageData(page) {
+            switch(page) {
+                case 'dashboard':
+                    updateDashboardStats();
+                    break;
+                case 'templates':
+                    renderTemplatesTable();
+                    break;
+                case 'managers':
+                    renderManagersTable();
+                    break;
+                case 'schedule':
+                    renderCalendar();
+                    renderUpcomingDepartures();
+                    break;
+            }
+        }
+
+        // ==================== MODALS ====================
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            if (modalId === 'managerModal') {
+                editingManagerId = null;
+                document.getElementById('managerModalTitle').textContent = 'Добавить менеджера';
+            }
+            if (modalId === 'templateModal') {
+                editingTemplateId = null;
+            }
+        }
+
+        // ==================== TOAST NOTIFICATIONS ====================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type]}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // ==================== DASHBOARD ====================
+        function updateDashboardStats() {
+            const totalPilgrims = pilgrims.length;
+            const readyPilgrims = pilgrims.filter(p => p.visa.status === 'approved' && p.passport.ocr_status === 'checked').length;
+            const pendingVisas = pilgrims.filter(p => p.visa.status === 'pending').length;
+            const upcomingGroups = service_groups.filter(g => new Date(g.depart_date) > new Date()).length;
+            
+            document.getElementById('statTotalPilgrims').textContent = totalPilgrims;
+            document.getElementById('statReady').textContent = readyPilgrims;
+            document.getElementById('statPending').textContent = pendingVisas;
+            document.getElementById('statUpcoming').textContent = upcomingGroups;
+            
+            // Update visa stats
+            const visaApproved = pilgrims.filter(p => p.visa.status === 'approved').length;
+            const visaPending = pilgrims.filter(p => p.visa.status === 'pending').length;
+            const visaNone = pilgrims.filter(p => p.visa.status === 'none').length;
+            
+            document.getElementById('visaApprovedCount').textContent = visaApproved;
+            document.getElementById('visaPendingCount').textContent = visaPending;
+            document.getElementById('visaNoneCount').textContent = visaNone;
+        }
+
+        function renderChart() {
+            const container = document.getElementById('monthlyChart');
+            const months = ['Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+            const values = [85, 120, 95, 140, 175, 210];
+            const maxValue = Math.max(...values);
+            
+            container.innerHTML = months.map((month, i) => `
+                <div class="chart-bar" style="height: ${(values[i] / maxValue) * 100}%;">
+                    <span class="chart-bar-value">${values[i]}</span>
+                    <span class="chart-bar-label">${month}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderActivityList() {
+            const container = document.getElementById('activityList');
+            container.innerHTML = activities.map(a => `
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: ${a.color}20; color: ${a.color};">
+                        ${a.icon}
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-text">${a.text}</div>
+                        <div class="activity-time">${a.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showAllActivities() {
+            showToast('Загружаются все активности...', 'info');
+        }
+
+        function quickReport() {
+            showToast('Генерация быстрого отчета...', 'info');
+            setTimeout(() => {
+                showToast('Отчет успешно сгенерирован!', 'success');
+            }, 1500);
+        }
+
+        // ==================== GROUPS & PILGRIMS ====================
+        function renderGroupsList() {
+            const container = document.getElementById('groupsList');
+            const groupsCount = service_groups.length;
+            document.getElementById('groupsCount').textContent = `(${groupsCount})`;
+            
+            container.innerHTML = service_groups.map(g => {
+                const manager = users.find(u => u.id === g.manager_id);
+                const pilgrimsCount = g.pilgrims ? g.pilgrims.length : 0;
+                const departDate = formatDate(g.depart_date);
+                
+                return `
+                    <div class="list-item ${selectedGroup === g.id ? 'active' : ''}" onclick="selectGroup(${g.id})">
+                        <div class="list-item-title">${g.name}</div>
+                        <div class="list-item-sub">${g.route}</div>
+                        <div class="list-item-sub">Вылет: ${departDate} • ${pilgrimsCount} паломников</div>
+                        <div class="list-item-sub">Менеджер: ${manager ? manager.name + ' ' + manager.lastName : 'Не назначен'}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectGroup(groupId) {
+            selectedGroup = groupId;
+            selectedPilgrim = null;
+            renderGroupsList();
+            renderPilgrimsList();
+            renderPilgrimCard();
+            
+            const group = service_groups.find(g => g.id === groupId);
+            const pilgrimsCount = group && group.pilgrims ? group.pilgrims.length : 0;
+            document.getElementById('pilgrimsTitle').textContent = `Паломники (${pilgrimsCount})`;
+        }
+
+        function renderPilgrimsList() {
+            const container = document.getElementById('pilgrimsList');
+            
+            if (!selectedGroup) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📁</div><div class="empty-state-text">Выберите группу</div></div>';
+                return;
+            }
+            
+            const groupPilgrims = pilgrims.filter(p => p.group_id === selectedGroup);
+            const searchTerm = document.getElementById('pilgrimSearch').value.toLowerCase();
+            const filtered = groupPilgrims.filter(p => 
+                p.full_name.toLowerCase().includes(searchTerm) || 
+                p.phone.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👤</div><div class="empty-state-text">Паломники не найдены</div></div>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map(p => {
+                return `
+                    <div class="pilgrim-item ${selectedPilgrim === p.id ? 'active' : ''}" onclick="selectPilgrim(${p.id})">
+                        <div class="pilgrim-avatar">${getInitials(p.full_name)}</div>
+                        <div class="pilgrim-info">
+                            <div class="pilgrim-name">${p.full_name}</div>
+                            <div class="pilgrim-passport">${p.phone} • ${getMessengerBadge(p.messenger)}</div>
+                        </div>
+                        ${getVisaStatusBadge(p.visa.status)}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterPilgrims() {
+            renderPilgrimsList();
+        }
+
+        function selectPilgrim(pilgrimId) {
+            selectedPilgrim = pilgrimId;
+            renderPilgrimsList();
+            renderPilgrimCard();
+        }
+
+        function getInitials(fullName) {
+            return fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+        }
+
+        function getMessengerBadge(messenger) {
+            const badges = {
+                'whatsapp': '<span class="badge badge-success">WhatsApp</span>',
+                'telegram': '<span class="badge badge-primary">Telegram</span>',
+                'sms': '<span class="badge badge-secondary">SMS</span>'
+            };
+            return badges[messenger] || '';
+        }
+
+        function getVisaStatusBadge(status) {
+            const badges = {
+                'none': '<span class="badge badge-neutral">Без визы</span>',
+                'pending': '<span class="badge badge-warning">Ожидание</span>',
+                'approved': '<span class="badge badge-success">Одобрено</span>'
+            };
+            return badges[status] || badges['none'];
+        }
+
+        function getOCRStatusBadge(status) {
+            const badges = {
+                'new': '<span class="ocr-status new">OCR не запускался</span>',
+                'ocr_done': '<span class="ocr-status ocr_done">OCR выполнен</span>',
+                'checked': '<span class="ocr-status checked">Проверено</span>'
+            };
+            return badges[status] || badges['new'];
+        }
+
+        function renderPilgrimCard() {
+            const container = document.getElementById('pilgrimCard');
+            
+            if (!selectedPilgrim) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👤</div><div class="empty-state-text">Выберите паломника для просмотра</div></div>';
+                return;
+            }
+            
+            const p = pilgrims.find(p => p.id === selectedPilgrim);
+            const group = service_groups.find(g => g.id === p.group_id);
+            
+            container.innerHTML = `
+                <div class="pilgrim-card-header">
+                    <div class="pilgrim-card-avatar">${getInitials(p.full_name)}</div>
+                    <div>
+                        <div class="pilgrim-card-name">${p.full_name}</div>
+                        <div class="pilgrim-card-id">ID: ${p.id} • ${group ? group.name : 'Группа не найдена'}</div>
+                    </div>
+                </div>
+                <div class="pilgrim-card-body">
+                    <div>
+                        <div class="info-section">
+                            <div class="info-section-title">
+                                Паспорт и OCR
+                                ${getOCRStatusBadge(p.passport.ocr_status)}
+                            </div>
+                            <div class="help-text">OCR считывает данные паспорта, сервис-менеджер проверяет и исправляет.</div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Серия/номер паспорта</label>
+                                    <input type="text" class="form-input" id="passportNumber" value="${p.passport.number || ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Гражданство</label>
+                                    <input type="text" class="form-input" id="passportCitizenship" value="${p.passport.citizenship || ''}">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Дата рождения</label>
+                                    <input type="date" class="form-input" id="passportBirthDate" value="${p.passport.birth_date || ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Пол</label>
+                                    <select class="form-select" id="passportGender">
+                                        <option value="Муж" ${p.passport.gender === 'Муж' ? 'selected' : ''}>Муж</option>
+                                        <option value="Жен" ${p.passport.gender === 'Жен' ? 'selected' : ''}>Жен</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Дата выдачи</label>
+                                    <input type="date" class="form-input" id="passportIssueDate" value="${p.passport.issue_date || ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Действителен до</label>
+                                    <input type="date" class="form-input" id="passportExpiryDate" value="${p.passport.expiry_date || ''}">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Кем выдан</label>
+                                <input type="text" class="form-input" id="passportAuthority" value="${p.passport.authority || ''}">
+                            </div>
+                            
+                            <div class="file-input-wrapper">
+                                <input type="file" id="passportFile" accept="image/*,.pdf">
+                                <div class="file-input-label">
+                                    <span>📄</span>
+                                    <span>Паспорт (оригинал): Выбрать файл</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 8px; margin-top: 16px;">
+                                <button class="btn btn-secondary btn-sm" onclick="runOCR(${p.id})">🔍 Запустить OCR</button>
+                                <button class="btn btn-success btn-sm" onclick="markPassportChecked(${p.id})">✓ Отметить как проверено</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="info-section">
+                            <div class="info-section-title">
+                                Виза и документы
+                                ${getVisaStatusBadge(p.visa.status)}
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Статус визы</label>
+                                    <select class="form-select" id="visaStatus">
+                                        <option value="none" ${p.visa.status === 'none' ? 'selected' : ''}>Нет заявки</option>
+                                        <option value="pending" ${p.visa.status === 'pending' ? 'selected' : ''}>Ожидание</option>
+                                        <option value="approved" ${p.visa.status === 'approved' ? 'selected' : ''}>Одобрено</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Медстраховка</label>
+                                    <select class="form-select" id="insuranceStatus">
+                                        <option value="yes" ${p.visa.hasInsurance ? 'selected' : ''}>Есть</option>
+                                        <option value="no" ${!p.visa.hasInsurance ? 'selected' : ''}>Нет</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="file-input-wrapper">
+                                <input type="file" id="visaFile" accept=".pdf,.jpg,.jpeg,.png">
+                                <div class="file-input-label">
+                                    <span>📄</span>
+                                    <span>Готовая виза: Выбрать файл</span>
+                                </div>
+                            </div>
+                            
+                            <div class="file-input-wrapper">
+                                <input type="file" id="insuranceFile" accept=".pdf,.jpg,.jpeg,.png">
+                                <div class="file-input-label">
+                                    <span>📄</span>
+                                    <span>Медстраховка: Выбрать файл</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-section-title" style="margin-top: 20px;">Загруженные документы</div>
+                            ${p.documents && p.documents.length > 0 ? p.documents.map(doc => {
+                                return `
+                                    <div class="document-item">
+                                        <div class="document-icon">📄</div>
+                                        <div class="document-info">
+                                            <div class="document-name">${getDocumentTypeName(doc.type)}</div>
+                                            <div class="document-meta">Загружен ${formatDate(doc.uploaded_at)} • ${doc.uploaded_by}</div>
+                                        </div>
+                                        <div style="display: flex; gap: 4px;">
+                                            <button class="btn btn-secondary btn-icon btn-sm" onclick="openDocument(${doc.id})">👁</button>
+                                            <button class="btn btn-secondary btn-icon btn-sm" onclick="downloadDocument(${doc.id})">↓</button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('') : '<div class="empty-state-text">Нет загруженных документов</div>'}
+                        </div>
+                    </div>
+                </div>
+                <div class="pilgrim-card-actions">
+                    <button class="btn btn-primary btn-block" onclick="savePilgrimChanges(${p.id})">💾 Сохранить изменения</button>
+                </div>
+            `;
+        }
+
+        function getDocumentTypeName(type) {
+            const names = {
+                'passport': 'Паспорт',
+                'visa': 'Виза',
+                'insurance': 'Медстраховка',
+                'ticket': 'Билет',
+                'hotel_voucher': 'Ваучер отеля',
+                'itinerary': 'Маршрут',
+                'memo': 'Служебная записка'
+            };
+            return names[type] || type;
+        }
+
+        function runOCR(pilgrimId) {
+            showToast('Запуск OCR распознавания паспорта...', 'info');
+            setTimeout(() => {
+                const pilgrim = pilgrims.find(p => p.id === pilgrimId);
+                pilgrim.passport.ocr_status = 'ocr_done';
+                renderPilgrimCard();
+                showToast('OCR успешно завершён! Проверьте данные.', 'success');
+            }, 1500);
+        }
+
+        function markPassportChecked(pilgrimId) {
+            const pilgrim = pilgrims.find(p => p.id === pilgrimId);
+            pilgrim.passport.ocr_status = 'checked';
+            pilgrim.passport.verified = true;
+            renderPilgrimCard();
+            showToast('Паспорт отмечен как проверенный', 'success');
+        }
+
+        function openDocument(docId) {
+            showToast(`Открытие документа #${docId} (в реальной системе здесь был бы просмотр)`, 'info');
+        }
+
+        function downloadDocument(docId) {
+            showToast(`Скачивание документа #${docId}`, 'info');
+        }
+
+        function savePilgrimChanges(pilgrimId) {
+            const pilgrim = pilgrims.find(p => p.id === pilgrimId);
+            
+            // Обновление данных паспорта
+            pilgrim.passport.number = document.getElementById('passportNumber').value;
+            pilgrim.passport.citizenship = document.getElementById('passportCitizenship').value;
+            pilgrim.passport.birth_date = document.getElementById('passportBirthDate').value;
+            pilgrim.passport.gender = document.getElementById('passportGender').value;
+            pilgrim.passport.issue_date = document.getElementById('passportIssueDate').value;
+            pilgrim.passport.expiry_date = document.getElementById('passportExpiryDate').value;
+            pilgrim.passport.authority = document.getElementById('passportAuthority').value;
+            
+            // Обновление статуса визы
+            pilgrim.visa.status = document.getElementById('visaStatus').value;
+            pilgrim.visa.hasInsurance = document.getElementById('insuranceStatus').value === 'yes';
+            
+            showToast('Изменения сохранены (в памяти)', 'success');
+            updateDashboardStats();
+        }
+
+        function savePilgrim() {
+            const newPilgrim = {
+                id: pilgrims.length + 1,
+                group_id: parseInt(document.getElementById('pilgrimGroup').value) || selectedGroup || 1,
+                full_name: `${document.getElementById('pilgrimLastName').value || 'Новый'} ${document.getElementById('pilgrimFirstName').value || 'Паломник'} ${document.getElementById('pilgrimMiddleName').value || ''}`,
+                phone: document.getElementById('pilgrimPhone').value || '+7 999 000-00-00',
+                messenger: document.getElementById('pilgrimMessenger').value || 'whatsapp',
+                status: 'active',
+                depart_date: service_groups.find(g => g.id === (parseInt(document.getElementById('pilgrimGroup').value) || selectedGroup || 1))?.depart_date || '2025-01-01',
+                return_date: service_groups.find(g => g.id === (parseInt(document.getElementById('pilgrimGroup').value) || selectedGroup || 1))?.return_date || '2025-01-15',
+                passport: {
+                    ocr_status: 'new',
+                    verified: false
+                },
+                visa: {
+                    status: 'none',
+                    hasInsurance: false
+                },
+                documents: []
+            };
+            
+            pilgrims.push(newPilgrim);
+            
+            // Добавляем паломника в группу
+            const group = service_groups.find(g => g.id === newPilgrim.group_id);
+            if (group && !group.pilgrims) group.pilgrims = [];
+            if (group && !group.pilgrims.includes(newPilgrim.id)) {
+                group.pilgrims.push(newPilgrim.id);
+            }
+            
+            closeModal('pilgrimModal');
+            renderPilgrimsList();
+            updateDashboardStats();
+            showToast('Паломник успешно добавлен!', 'success');
+            
+            // Clear form
+            document.querySelectorAll('#pilgrimModal input').forEach(i => i.value = '');
+        }
+
+        function saveGroup() {
+            const newGroup = {
+                id: service_groups.length + 1,
+                name: document.getElementById('groupName').value || 'Новая группа',
+                route: document.getElementById('groupRoute').value || 'Москва - Медина - Мекка',
+                depart_date: document.getElementById('groupDeparture').value || '2025-01-01',
+                return_date: document.getElementById('groupReturn').value || '2025-01-15',
+                status: 'preparing',
+                manager_id: parseInt(document.getElementById('groupManager').value) || 2,
+                created_at: new Date().toISOString().split('T')[0],
+                pilgrims: []
+            };
+            
+            service_groups.push(newGroup);
+            closeModal('groupModal');
+            renderGroupsList();
+            populateGroupSelects();
+            updateDashboardStats();
+            showToast('Группа успешно создана!', 'success');
+            
+            // Clear form
+            document.querySelectorAll('#groupModal input').forEach(i => i.value = '');
+        }
+
+        // ==================== TEMPLATES ====================
+        function renderTemplatesTable() {
+            const container = document.getElementById('templatesTable');
+            const filteredTemplates = templates.filter(t => {
+                if (currentTemplateTab === 'message') return t.type === 'message';
+                if (currentTemplateTab === 'document') return t.type === 'document';
+                if (currentTemplateTab === 'process') return t.type === 'process';
+                return true;
+            });
+            
+            container.innerHTML = filteredTemplates.map(t => `
+                <tr>
+                    <td><strong>${t.name}</strong></td>
+                    <td>${getTemplateTypeBadge(t.type)}</td>
+                    <td>${t.trigger_type === 'manual' ? 'Вручную' : t.trigger_type === 'status_change' ? 'Изменение статуса' : t.trigger_type === 'time_based' ? 'По времени' : 'Загрузка документа'}</td>
+                    <td>${getChannelBadge(t.channel)}</td>
+                    <td>${t.is_active ? '<span class="badge badge-success">Активен</span>' : '<span class="badge badge-neutral">Неактивен</span>'}</td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="btn btn-secondary btn-icon btn-sm" onclick="editTemplate(${t.id})">✏</button>
+                            <button class="btn btn-secondary btn-icon btn-sm" onclick="previewTemplate(${t.id})">👁</button>
+                            <button class="btn btn-danger btn-icon btn-sm" onclick="deleteTemplate(${t.id})">🗑</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getTemplateTypeBadge(type) {
+            const badges = {
+                'message': '<span class="badge badge-primary">Сообщение</span>',
+                'document': '<span class="badge badge-success">Документ</span>',
+                'process': '<span class="badge badge-warning">Процесс</span>'
+            };
+            return badges[type] || '';
+        }
+
+        function getChannelBadge(channel) {
+            const badges = {
+                'whatsapp': '<span class="badge badge-success">WhatsApp</span>',
+                'telegram': '<span class="badge badge-primary">Telegram</span>',
+                'sms': '<span class="badge badge-secondary">SMS</span>',
+                'email': '<span class="badge badge-neutral">Email</span>'
+            };
+            return badges[channel] || '';
+        }
+
+        function switchTab(tab, type) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentTemplateTab = type;
+            
+            const titles = {
+                'message': 'Шаблоны сообщений',
+                'document': 'Шаблоны документов',
+                'process': 'Шаблоны процессов'
+            };
+            document.getElementById('templatesTitle').textContent = titles[type];
+            
+            renderTemplatesTable();
+        }
+
+        function editTemplate(id) {
+            const t = templates.find(t => t.id === id);
+            editingTemplateId = id;
+            document.getElementById('templateName').value = t.name;
+            document.getElementById('templateType').value = t.type;
+            document.getElementById('templateTrigger').value = t.trigger_type;
+            document.getElementById('templateTriggerKey').value = t.trigger_key;
+            document.getElementById('templateChannel').value = t.channel;
+            document.getElementById('templateContent').value = t.body;
+            openModal('templateModal');
+        }
+
+        function deleteTemplate(id) {
+            if (confirm('Удалить этот шаблон?')) {
+                templates = templates.filter(t => t.id !== id);
+                renderTemplatesTable();
+                showToast('Шаблон удалён', 'success');
+            }
+        }
+
+        function saveTemplate() {
+            const templateData = {
+                name: document.getElementById('templateName').value || 'Новый шаблон',
+                type: document.getElementById('templateType').value,
+                trigger_type: document.getElementById('templateTrigger').value,
+                trigger_key: document.getElementById('templateTriggerKey').value,
+                channel: document.getElementById('templateChannel').value,
+                body: document.getElementById('templateContent').value || '',
+                is_active: true,
+                created_at: new Date().toISOString().split('T')[0]
+            };
+            
+            if (editingTemplateId) {
+                const index = templates.findIndex(t => t.id === editingTemplateId);
+                templates[index] = { ...templates[index], ...templateData };
+                showToast('Шаблон обновлён', 'success');
+            } else {
+                templateData.id = templates.length + 1;
+                templates.push(templateData);
+                showToast('Шаблон создан', 'success');
+            }
+            
+            closeModal('templateModal');
+            renderTemplatesTable();
+        }
+
+        function previewTemplate(id) {
+            let template;
+            if (id) {
+                template = templates.find(t => t.id === id);
+            } else {
+                template = {
+                    body: document.getElementById('templateContent').value
+                };
+            }
+            
+            let previewText = template.body;
+            previewText = previewText.replace(/\{name\}/g, 'Ахмед');
+            previewText = previewText.replace(/\{route\}/g, 'Москва - Медина - Мекка');
+            previewText = previewText.replace(/\{depart_date\}/g, '15.12.2024');
+            
+            alert('Предпросмотр шаблона:\n\n' + previewText);
+        }
+
+        function updateTemplateFields() {
+            // Можно добавить логику скрытия/показа полей в зависимости от типа
+        }
+
+        // ==================== MANAGERS ====================
+        function renderManagersTable() {
+            const container = document.getElementById('managersTable');
+            const roleFilter = document.getElementById('managerRoleFilter').value;
+            
+            const filtered = users.filter(u => {
+                if (!roleFilter) return true;
+                if (roleFilter === 'service') return u.role === 'service';
+                if (roleFilter === 'visa') return u.role === 'visa';
+                if (roleFilter === 'admin') return u.role === 'admin';
+                return true;
+            });
+            
+            container.innerHTML = filtered.map(u => {
+                const groupsCount = u.groups_count || service_groups.filter(g => g.manager_id === u.id).length;
+                const visasCount = u.visas_count || 0;
+                
+                return `
+                    <tr>
+                        <td><strong>${u.name} ${u.lastName}</strong></td>
+                        <td>${u.phone}</td>
+                        <td>${u.email}</td>
+                        <td>${getUserRoleBadge(u.role)}</td>
+                        <td>${u.role === 'service' ? groupsCount + ' групп' : u.role === 'visa' ? visasCount + ' заявок' : '—'}</td>
+                        <td>
+                            <div class="table-actions">
+                                <button class="btn btn-secondary btn-icon btn-sm" onclick="editManager(${u.id})">✏</button>
+                                ${u.role !== 'admin' ? `<button class="btn btn-danger btn-icon btn-sm" onclick="deleteManager(${u.id})">🗑</button>` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterManagers() {
+            renderManagersTable();
+        }
+
+        function getUserRoleBadge(role) {
+            const badges = {
+                'admin': '<span class="badge badge-neutral">Администратор</span>',
+                'service': '<span class="badge badge-primary">Сервис менеджер</span>',
+                'visa': '<span class="badge badge-success">Виза менеджер</span>'
+            };
+            return badges[role] || '';
+        }
+
+        function editManager(id) {
+            const u = users.find(u => u.id === id);
+            editingManagerId = id;
+            document.getElementById('managerModalTitle').textContent = 'Редактировать менеджера';
+            document.getElementById('managerName').value = u.name;
+            document.getElementById('managerLastName').value = u.lastName;
+            document.getElementById('managerPhone').value = u.phone;
+            document.getElementById('managerEmail').value = u.email;
+            document.getElementById('managerRole').value = u.role;
+            document.getElementById('managerLanguage').value = u.language || 'ru';
+            openModal('managerModal');
+        }
+
+        function deleteManager(id) {
+            const user = users.find(u => u.id === id);
+            if (user && user.role === 'admin') {
+                showToast('Администратора нельзя удалить', 'error');
+                return;
+            }
+            
+            if (confirm('Удалить этого менеджера?')) {
+                users = users.filter(u => u.id !== id);
+                renderManagersTable();
+                populateManagerSelects();
+                showToast('Менеджер удалён', 'success');
+            }
+        }
+
+        function saveManager() {
+            const managerData = {
+                name: document.getElementById('managerName').value || 'Новый',
+                lastName: document.getElementById('managerLastName').value || 'Менеджер',
+                phone: document.getElementById('managerPhone').value || '+7 999 000-00-00',
+                email: document.getElementById('managerEmail').value || 'manager@atlas.com',
+                role: document.getElementById('managerRole').value,
+                language: document.getElementById('managerLanguage').value || 'ru',
+                created_at: new Date().toISOString().split('T')[0]
+            };
+            
+            if (editingManagerId) {
+                const index = users.findIndex(u => u.id === editingManagerId);
+                users[index] = { ...users[index], ...managerData };
+                showToast('Данные менеджера обновлены', 'success');
+            } else {
+                managerData.id = users.length + 1;
+                users.push(managerData);
+                showToast('Менеджер добавлен', 'success');
+            }
+            
+            closeModal('managerModal');
+            renderManagersTable();
+            populateManagerSelects();
+        }
+
+        // ==================== SCHEDULE ====================
+        function renderCalendar() {
+            const container = document.getElementById('calendarGrid');
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+            
+            const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 
+                               'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+            document.getElementById('calendarMonth').textContent = `${monthNames[month]} ${year}`;
+            
+            const weekdays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+            let html = weekdays.map(d => `<div class="calendar-weekday">${d}</div>`).join('');
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            let startDay = firstDay.getDay() || 7;
+            
+            // Previous month days
+            for (let i = startDay - 1; i > 0; i--) {
+                const d = new Date(year, month, 1 - i);
+                html += `<div class="calendar-day other-month"><span class="calendar-day-number">${d.getDate()}</span></div>`;
+            }
+            
+            // Current month days
+            const today = new Date();
+            for (let i = 1; i <= lastDay.getDate(); i++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const dayEvents = calendar_events.filter(e => e.date === dateStr);
+                const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === i;
+                
+                html += `
+                    <div class="calendar-day ${isToday ? 'today' : ''}" onclick="showDayEvents('${dateStr}')">
+                        <span class="calendar-day-number">${i}</span>
+                        <div class="calendar-events">
+                            ${dayEvents.map(e => `<div class="calendar-event ${e.type}">${e.name}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Next month days
+            const remaining = 42 - (startDay - 1 + lastDay.getDate());
+            for (let i = 1; i <= remaining && remaining < 14; i++) {
+                html += `<div class="calendar-day other-month"><span class="calendar-day-number">${i}</span></div>`;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function changeMonth(delta) {
+            currentMonth.setMonth(currentMonth.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function showDayEvents(dateStr) {
+            const dayEvents = calendar_events.filter(e => e.date === dateStr);
+            if (dayEvents.length > 0) {
+                const eventList = dayEvents.map(e => {
+                    const groups = service_groups.filter(g => e.group_ids.includes(g.id));
+                    const groupNames = groups.map(g => g.name).join(', ');
+                    return `• ${e.name} (${e.time}) — ${groupNames || 'Группа не найдена'}`;
+                }).join('\n');
+                alert(`События на ${formatDate(dateStr)}:\n\n${eventList}`);
+            } else {
+                alert(`На ${formatDate(dateStr)} нет запланированных событий.`);
+            }
+        }
+
+        function renderUpcomingDepartures() {
+            const container = document.getElementById('upcomingDeparturesTable');
+            const upcomingGroups = service_groups.filter(g => new Date(g.depart_date) > new Date());
+            
+            container.innerHTML = upcomingGroups.map(group => `
+                <tr>
+                    <td><strong>${group.name}</strong></td>
+                    <td>${formatDate(group.depart_date)}</td>
+                    <td>${formatDate(group.return_date)}</td>
+                    <td>${group.pilgrims ? group.pilgrims.length : 0}</td>
+                    <td><span class="badge badge-${group.status}">${group.status}</span></td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="selectGroup(${group.id})">Открыть</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function saveEvent() {
+            const groupSelect = document.getElementById('eventGroup');
+            const selectedGroups = Array.from(groupSelect.selectedOptions).map(option => parseInt(option.value));
+            
+            const newEvent = {
+                id: calendar_events.length + 1,
+                name: document.getElementById('eventName').value || 'Новое событие',
+                type: document.getElementById('eventType').value,
+                date: document.getElementById('eventDate').value,
+                time: document.getElementById('eventTime').value || '12:00',
+                group_ids: selectedGroups,
+                note: document.getElementById('eventNote').value || ''
+            };
+            
+            calendar_events.push(newEvent);
+            closeModal('eventModal');
+            renderCalendar();
+            showToast('Событие создано', 'success');
+            
+            document.querySelectorAll('#eventModal input, #eventModal textarea').forEach(i => i.value = '');
+        }
+
+        // ==================== SETTINGS ====================
+        function testOCRConnection() {
+            showToast('Проверка подключения к OCR...', 'info');
+            setTimeout(() => {
+                showToast('Подключение к OCR успешно!', 'success');
+            }, 1500);
+        }
+
+        function sendTestEmail() {
+            showToast('Отправка тестового письма...', 'info');
+            setTimeout(() => {
+                showToast('Тестовое письмо отправлено (симуляция)', 'success');
+            }, 1500);
+        }
+
+        function saveSettings() {
+            // Сохранение настроек OCR
+            system_settings.ocr.api_key = document.getElementById('ocrApiKey').value;
+            system_settings.ocr.endpoint = document.getElementById('ocrEndpoint').value;
+            system_settings.ocr.language = document.getElementById('ocrLanguage').value;
+            
+            // Сохранение настроек SMTP
+            system_settings.smtp.host = document.getElementById('smtpHost').value;
+            system_settings.smtp.port = document.getElementById('smtpPort').value;
+            system_settings.smtp.login = document.getElementById('smtpLogin').value;
+            system_settings.smtp.password = document.getElementById('smtpPassword').value;
+            system_settings.smtp.from = document.getElementById('smtpFrom').value;
+            
+            // Сохранение настроек мессенджеров
+            system_settings.messengers.whatsapp_api_key = document.getElementById('whatsappApiKey').value;
+            system_settings.messengers.whatsapp_endpoint = document.getElementById('whatsappEndpoint').value;
+            system_settings.messengers.telegram_token = document.getElementById('telegramToken').value;
+            
+            // Сохранение настроек безопасности
+            system_settings.security.min_password_length = parseInt(document.getElementById('minPasswordLength').value) || 8;
+            system_settings.security.require_2fa = document.getElementById('require2FA').checked;
+            system_settings.security.enable_audit_log = document.getElementById('enableAuditLog').checked;
+            
+            showToast('Сохранение настроек...', 'info');
+            setTimeout(() => {
+                showToast('Настройки успешно сохранены!', 'success');
+            }, 1500);
+        }
+
+        // ==================== HELPER FUNCTIONS ====================
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function populateGroupSelects() {
+            const selects = ['pilgrimGroup', 'eventGroup', 'groupManager'];
+            selects.forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    if (id === 'eventGroup') {
+                        select.innerHTML = service_groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+                        select.multiple = true;
+                    } else {
+                        const serviceManagers = users.filter(u => u.role === 'service');
+                        if (id === 'groupManager') {
+                            select.innerHTML = serviceManagers.map(m => `<option value="${m.id}">${m.name} ${m.lastName}</option>`).join('');
+                        } else {
+                            select.innerHTML = service_groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+                        }
+                    }
+                }
+            });
+        }
+
+        function populateManagerSelects() {
+            const select = document.getElementById('groupManager');
+            if (select) {
+                const serviceManagers = users.filter(u => u.role === 'service');
+                select.innerHTML = serviceManagers.map(m => `<option value="${m.id}">${m.name} ${m.lastName}</option>`).join('');
+            }
+        }
+    </script>
+</body>
+</html>
